@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6T9 — Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        g: {
+                            50: '#fafafa', 100: '#f5f5f5', 200: '#eeeeee',
+                            300: '#e0e0e0', 400: '#bdbdbd', 500: '#9e9e9e',
+                            600: '#757575', 700: '#616161', 800: '#424242',
+                            900: '#212121', 950: '#161616',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background: #161616; color: #f5f5f5; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #212121; }
+        ::-webkit-scrollbar-thumb { background: #616161; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #757575; }
+        .toast { animation: slideIn 0.4s ease, fadeOut 0.4s ease 2.6s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .rank-badge { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+        .tab-btn { transition: all 0.2s ease; }
+        .tab-btn.active { background: #424242; color: #f5f5f5; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3"></div>
+
+    <!-- ===== LOGIN GATE ===== -->
+    <div id="login-gate" class="min-h-screen flex items-center justify-center px-6">
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-8">
+                <div class="w-14 h-14 rounded-2xl bg-g-800 border border-g-700 flex items-center justify-center mx-auto mb-4">
+                    <span class="text-g-300 font-bold text-xl">6T9</span>
+                </div>
+                <h1 class="text-2xl font-semibold text-g-100">Admin Access</h1>
+                <p class="text-g-500 text-sm mt-1">Enter the admin password to continue</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <input type="password" id="login-password" placeholder="Password"
+                        class="w-full px-4 py-3 rounded-lg bg-g-900 border border-g-800 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"
+                        autocomplete="off">
+                    <p id="login-error" class="text-red-400 text-xs mt-2 hidden">Incorrect password. Try again.</p>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-lg bg-g-100 text-g-900 font-semibold text-sm hover:bg-g-200 transition-colors">
+                    Sign In
+                </button>
+                <p class="text-g-600 text-xs text-center">Default password: <code class="text-g-500 bg-g-800 px-1.5 py-0.5 rounded">6t9admin</code></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== ADMIN PANEL ===== -->
+    <div id="admin-panel" class="hidden">
+        <!-- Top Bar -->
+        <header class="sticky top-0 z-50" style="background: rgba(22,22,22,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06);">
+            <div class="max-w-5xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-g-800 border border-g-700 flex items-center justify-center">
+                        <span class="text-g-300 font-bold text-xs">6T9</span>
+                    </div>
+                    <span class="text-g-100 font-semibold text-sm hidden sm:inline">Admin Panel</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="text-g-500 hover:text-g-300 text-sm transition-colors flex items-center gap-1.5">
+                        <span class="iconify text-base" data-icon="lucide:external-link"></span>
+                        <span class="hidden sm:inline">View Site</span>
+                    </a>
+                    <button id="logout-btn" class="text-g-500 hover:text-g-300 text-sm transition-colors flex items-center gap-1.5">
+                        <span class="iconify text-base" data-icon="lucide:log-out"></span>
+                        <span class="hidden sm:inline">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-5xl mx-auto px-5 sm:px-6 py-8 sm:py-10">
+            <!-- Stats -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <div class="bg-g-900 border border-g-800 rounded-xl p-4 sm:p-5">
+                    <p class="text-g-500 text-xs font-medium mb-1">POSTS</p>
+                    <p class="text-g-100 text-2xl font-semibold" id="stat-posts">0</p>
+                </div>
+                <div class="bg-g-900 border border-g-800 rounded-xl p-4 sm:p-5">
+                    <p class="text-g-500 text-xs font-medium mb-1">PINNED</p>
+                    <p class="text-g-100 text-2xl font-semibold" id="stat-pinned">0</p>
+                </div>
+                <div class="bg-g-900 border border-g-800 rounded-xl p-4 sm:p-5">
+                    <p class="text-g-500 text-xs font-medium mb-1">PLAYERS</p>
+                    <p class="text-g-100 text-2xl font-semibold" id="stat-players">0</p>
+                </div>
+                <div class="bg-g-900 border border-g-800 rounded-xl p-4 sm:p-5">
+                    <p class="text-g-500 text-xs font-medium mb-1">TICKETS</p>
+                    <p class="text-g-100 text-2xl font-semibold" id="stat-tickets">0</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex gap-2 mb-8 overflow-x-auto pb-2">
+                <button class="tab-btn active px-4 py-2 rounded-lg bg-g-900 border border-g-800 text-g-400 text-sm font-medium whitespace-nowrap flex items-center gap-2" data-tab="posts">
+                    <span class="iconify text-base" data-icon="lucide:message-square"></span>
+                    Posts
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-lg bg-g-900 border border-g-800 text-g-400 text-sm font-medium whitespace-nowrap flex items-center gap-2" data-tab="players">
+                    <span class="iconify text-base" data-icon="lucide:users"></span>
+                    Players
+                </button>
+                <button class="tab-btn px-4 py-2 rounded-lg bg-g-900 border border-g-800 text-g-400 text-sm font-medium whitespace-nowrap flex items-center gap-2" data-tab="tickets">
+                    <span class="iconify text-base" data-icon="lucide:ticket"></span>
+                    Tickets
+                </button>
+            </div>
+
+            <!-- ===== TAB: POSTS ===== -->
+            <div id="tab-posts" class="tab-content active">
+                <div class="bg-g-900 border border-g-800 rounded-xl p-6 sm:p-8 mb-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-9 h-9 rounded-lg bg-g-800 flex items-center justify-center">
+                            <span class="iconify text-g-400 text-lg" data-icon="lucide:pencil"></span>
+                        </div>
+                        <div>
+                            <h2 class="text-g-100 font-semibold text-lg">Create New Post</h2>
+                            <p class="text-g-600 text-xs">Appears on the main site's announcement section</p>
+                        </div>
+                    </div>
+                    <form id="post-form" class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-g-300 text-sm font-medium mb-2">Post Title</label>
+                                <input type="text" id="post-title" required placeholder="Enter post title"
+                                    class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-g-300 text-sm font-medium mb-2">Author Name</label>
+                                <input type="text" id="post-author" required placeholder="e.g. ShadowKnight"
+                                    class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-g-300 text-sm font-medium mb-2">Content</label>
+                            <textarea id="post-content" rows="5" required placeholder="Write your announcement here..."
+                                class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <label class="flex items-center gap-3 cursor-pointer select-none">
+                                <input type="checkbox" id="post-pinned" class="w-4 h-4 rounded bg-g-800 border-g-700 text-g-500 focus:ring-g-500 focus:ring-offset-0 cursor-pointer">
+                                <span class="text-g-300 text-sm">Pin this post</span>
+                            </label>
+                            <button type="submit" class="px-6 py-3 rounded-lg bg-g-100 text-g-900 font-semibold text-sm hover:bg-g-200 transition-colors flex items-center gap-2">
+                                <span class="iconify text-base" data-icon="lucide:send"></span>
+                                Publish Post
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Posts List -->
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-g-100 font-semibold text-lg">All Posts</h2>
+                    <button id="clear-posts-btn" class="text-g-600 hover:text-red-400 text-xs font-medium transition-colors flex items-center gap-1">
+                        <span class="iconify text-sm" data-icon="lucide:trash-2"></span> Clear All
+                    </button>
+                </div>
+                <div id="posts-list" class="flex flex-col gap-4"></div>
+                <div id="empty-posts" class="hidden text-center py-14">
+                    <span class="iconify text-g-800 text-5xl mx-auto mb-4" data-icon="lucide:file-text"></span>
+                    <p class="text-g-600 text-sm">No posts yet. Create your first announcement above.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB: PLAYERS ===== -->
+            <div id="tab-players" class="tab-content">
+                <!-- Add Player Form -->
+                <div class="bg-g-900 border border-g-800 rounded-xl p-6 sm:p-8 mb-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-9 h-9 rounded-lg bg-g-800 flex items-center justify-center">
+                            <span class="iconify text-g-400 text-lg" data-icon="lucide:user-plus"></span>
+                        </div>
+                        <div>
+                            <h2 class="text-g-100 font-semibold text-lg" id="player-form-title">Add New Player</h2>
+                            <p class="text-g-600 text-xs" id="player-form-subtitle">Add a member to the guild roster</p>
+                        </div>
+                    </div>
+                    <form id="player-form" class="space-y-5">
+                        <input type="hidden" id="player-edit-id" value="">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-g-300 text-sm font-medium mb-2">Player Name <span class="text-red-400">*</span></label>
+                                <input type="text" id="player-name" required placeholder="e.g. ShadowKnight"
+                                    class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-g-300 text-sm font-medium mb-2">Discord Handle <span class="text-red-400">*</span></label>
+                                <input type="text" id="player-discord" required placeholder="e.g. @shadowknight"
+                                    class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-g-300 text-sm font-medium mb-2">Rank / Role <span class="text-red-400">*</span></label>
+                                <select id="player-rank" required
+                                    class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors appearance-none cursor-pointer">
+                                    <option value="" class="bg-g-800">Select rank</option>
+                                    <option value="Leader" class="bg-g-800">Leader</option>
+                                    <option value="Co-Leader" class="bg-g-800">Co-Leader</option>
+                                    <option value="Officer" class="bg-g-800">Officer</option>
+                                    <option value="Veteran" class="bg-g-800">Veteran</option>
+                                    <option value="Member" class="bg-g-800">Member</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-g-300 text-sm font-medium mb-2">Discord Avatar URL</label>
+                                <input type="url" id="player-avatar" placeholder="https://... (optional)"
+                                    class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-g-300 text-sm font-medium mb-2">Minecraft Skin Image URL</label>
+                            <input type="url" id="player-skin" placeholder="https://... (optional)"
+                                class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-g-300 text-sm font-medium mb-2">Description <span class="text-red-400">*</span></label>
+                            <textarea id="player-desc" rows="3" required placeholder="Short description about the player..."
+                                class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea>
+                        </div>
+                        <!-- Preview -->
+                        <div id="player-preview" class="hidden">
+                            <p class="text-g-500 text-xs font-medium mb-3">PREVIEW</p>
+                            <div class="bg-g-950 border border-g-800 rounded-xl overflow-hidden max-w-xs">
+                                <div class="flex border-b border-g-800">
+                                    <div class="w-1/2 p-3 flex items-center justify-center">
+                                        <img id="preview-avatar" src="" alt="" class="w-16 h-16 rounded-xl object-cover border border-g-700">
+                                    </div>
+                                    <div class="w-1/2 p-3 flex items-center justify-center">
+                                        <img id="preview-skin" src="" alt="" class="w-14 h-24 rounded-lg object-cover border border-g-700" style="image-rendering:pixelated">
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-g-100 font-semibold text-sm" id="preview-name"></span>
+                                        <span class="rank-badge px-2 py-0.5 rounded bg-g-800 text-g-400" id="preview-rank"></span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 mb-2">
+                                        <span class="iconify text-[#5865F2] text-xs" data-icon="ic:baseline-discord"></span>
+                                        <span class="text-g-500 text-xs" id="preview-discord"></span>
+                                    </div>
+                                    <p class="text-g-500 text-xs leading-relaxed" id="preview-desc"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button type="submit" id="player-submit-btn" class="px-6 py-3 rounded-lg bg-g-100 text-g-900 font-semibold text-sm hover:bg-g-200 transition-colors flex items-center gap-2">
+                                <span class="iconify text-base" data-icon="lucide:plus"></span>
+                                Add Player
+                            </button>
+                            <button type="button" id="player-cancel-btn" class="hidden px-6 py-3 rounded-lg border border-g-700 text-g-400 font-medium text-sm hover:border-g-500 hover:text-g-200 transition-all">
+                                Cancel Edit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Players List -->
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-g-100 font-semibold text-lg">All Players (<span id="player-count-label">0</span>)</h2>
+                    <button id="clear-players-btn" class="text-g-600 hover:text-red-400 text-xs font-medium transition-colors flex items-center gap-1">
+                        <span class="iconify text-sm" data-icon="lucide:trash-2"></span> Remove All
+                    </button>
+                </div>
+                <div id="players-list" class="flex flex-col gap-3"></div>
+                <div id="empty-players" class="hidden text-center py-14">
+                    <span class="iconify text-g-800 text-5xl mx-auto mb-4" data-icon="lucide:users"></span>
+                    <p class="text-g-600 text-sm">No players in the roster. Add your first member above.</p>
+                </div>
+            </div>
+
+            <!-- ===== TAB: TICKETS ===== -->
+            <div id="tab-tickets" class="tab-content">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-9 h-9 rounded-lg bg-g-800 flex items-center justify-center">
+                        <span class="iconify text-g-400 text-lg" data-icon="lucide:ticket"></span>
+                    </div>
+                    <div>
+                        <h2 class="text-g-100 font-semibold text-lg">Submitted Tickets</h2>
+                        <p class="text-g-600 text-xs">From the main site's Connect form</p>
+                    </div>
+                </div>
+                <div id="tickets-list" class="flex flex-col gap-4"></div>
+                <div id="empty-tickets" class="hidden text-center py-14">
+                    <span class="iconify text-g-800 text-4xl mx-auto mb-3" data-icon="lucide:inbox"></span>
+                    <p class="text-g-600 text-sm">No tickets submitted yet.</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+        // ===== CONFIG =====
+        var ADMIN_PASSWORD = '6t9admin';
+        var POSTS_KEY = '6t9_posts';
+        var PLAYERS_KEY = '6t9_players';
+        var TICKETS_KEY = '6t9_tickets';
+        var AUTH_KEY = '6t9_auth';
+
+        // ===== TOAST =====
+        function showToast(message, type) {
+            type = type || 'success';
+            var container = document.getElementById('toast-container');
+            var toast = document.createElement('div');
+            var border = type === 'success' ? 'border-g-500' : type === 'error' ? 'border-red-500' : 'border-g-600';
+            var icon = type === 'success' ? 'lucide:check-circle' : type === 'error' ? 'lucide:alert-circle' : 'lucide:info';
+            toast.className = 'toast flex items-center gap-3 px-5 py-3 rounded-lg bg-g-700 border ' + border + ' shadow-lg';
+            toast.innerHTML = '<span class="iconify text-g-300 text-lg" data-icon="' + icon + '"></span><span class="text-g-100 text-sm font-medium">' + message + '</span>';
+            container.appendChild(toast);
+            setTimeout(function() { toast.remove(); }, 3000);
+        }
+
+        // ===== AUTH =====
+        function checkAuth() {
+            if (sessionStorage.getItem(AUTH_KEY) === 'true') { showPanel(); }
+            else { showLogin(); }
+        }
+        function showLogin() {
+            document.getElementById('login-gate').classList.remove('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+        }
+        function showPanel() {
+            document.getElementById('login-gate').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            refreshAll();
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var pw = document.getElementById('login-password').value;
+            if (pw === ADMIN_PASSWORD) {
+                sessionStorage.setItem(AUTH_KEY, 'true');
+                showPanel();
+                showToast('Welcome back, Admin.');
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+                document.getElementById('login-password').value = '';
+                setTimeout(function() { document.getElementById('login-error').classList.add('hidden'); }, 3000);
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            sessionStorage.removeItem(AUTH_KEY);
+            showLogin();
+            document.getElementById('login-password').value = '';
+            showToast('Logged out.', 'info');
+        });
+
+        // ===== TABS =====
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+                document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ===== HELPERS =====
+        function formatDate(dateStr) {
+            var d = new Date(dateStr);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        function getPosts() { return JSON.parse(localStorage.getItem(POSTS_KEY) || '[]'); }
+        function savePosts(p) { localStorage.setItem(POSTS_KEY, JSON.stringify(p)); }
+        function getPlayers() { return JSON.parse(localStorage.getItem(PLAYERS_KEY) || '[]'); }
+        function savePlayers(p) { localStorage.setItem(PLAYERS_KEY, JSON.stringify(p)); }
+        function getTickets() { return JSON.parse(localStorage.getItem(TICKETS_KEY) || '[]'); }
+        function saveTickets(t) { localStorage.setItem(TICKETS_KEY, JSON.stringify(t)); }
+
+        function getRankBadgeHTML(rank) {
+            var colors = {
+                'Leader': 'bg-g-200 text-g-900',
+                'Co-Leader': 'bg-g-300 text-g-900',
+                'Officer': 'bg-g-500 text-g-900',
+                'Veteran': 'bg-g-700 text-g-200',
+                'Member': 'bg-g-800 text-g-400'
+            };
+            var c = colors[rank] || 'bg-g-800 text-g-400';
+            return '<span class="rank-badge px-2 py-0.5 rounded ' + c + '">' + rank + '</span>';
+        }
+
+        // ===== STATS =====
+        function updateStats() {
+            var posts = getPosts();
+            var players = getPlayers();
+            var tickets = getTickets();
+            document.getElementById('stat-posts').textContent = posts.length;
+            document.getElementById('stat-pinned').textContent = posts.filter(function(p) { return p.pinned; }).length;
+            document.getElementById('stat-players').textContent = players.length;
+            document.getElementById('stat-tickets').textContent = tickets.length;
+        }
+
+        // ===== POSTS =====
+        function loadPosts() {
+            var posts = getPosts();
+            var container = document.getElementById('posts-list');
+            var empty = document.getElementById('empty-posts');
+            if (posts.length === 0) { container.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            posts.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+            container.innerHTML = posts.map(function(post) {
+                return '<div class="bg-g-900 border border-g-800 rounded-xl p-5 ' + (post.pinned ? 'border-l-2 border-l-g-400' : '') + '">' +
+                    '<div class="flex items-start justify-between gap-4"><div class="flex-1 min-w-0">' +
+                    '<div class="flex items-center gap-2 mb-1 flex-wrap"><h3 class="text-g-100 font-semibold text-sm">' + post.title + '</h3>' +
+                    (post.pinned ? '<span class="rank-badge px-1.5 py-0.5 rounded bg-g-800 text-g-500">PINNED</span>' : '') + '</div>' +
+                    '<p class="text-g-400 text-xs mb-2 line-clamp-2">' + post.content + '</p>' +
+                    '<div class="flex items-center gap-3 text-g-600 text-xs"><span>By ' + post.author + '</span><span>·</span><span>' + formatDate(post.date) + '</span></div>' +
+                    '</div><div class="flex items-center gap-1 shrink-0">' +
+                    '<button onclick="togglePin(' + post.id + ')" title="' + (post.pinned ? 'Unpin' : 'Pin') + '" class="w-8 h-8 rounded-lg bg-g-800 hover:bg-g-700 flex items-center justify-center transition-colors">' +
+                    '<span class="iconify text-g-400 text-sm" data-icon="' + (post.pinned ? 'lucide:pin-off' : 'lucide:pin') + '"></span></button>' +
+                    '<button onclick="deletePost(' + post.id + ')" title="Delete" class="w-8 h-8 rounded-lg bg-g-800 hover:bg-red-900/50 flex items-center justify-center transition-colors group">' +
+                    '<span class="iconify text-g-400 group-hover:text-red-400 text-sm" data-icon="lucide:trash-2"></span></button>' +
+                    '</div></div></div>';
+            }).join('');
+        }
+
+        document.getElementById('post-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var title = document.getElementById('post-title').value.trim();
+            var author = document.getElementById('post-author').value.trim();
+            var content = document.getElementById('post-content').value.trim();
+            var pinned = document.getElementById('post-pinned').checked;
+            if (!title || !author || !content) { showToast('Fill in all fields.', 'error'); return; }
+            var posts = getPosts();
+            posts.push({ id: Date.now(), title: title, author: author, content: content, date: new Date().toISOString().split('T')[0], pinned: pinned });
+            savePosts(posts);
+            this.reset();
+            loadPosts(); updateStats();
+            showToast('Post published!');
+        });
+
+        window.deletePost = function(id) {
+            savePosts(getPosts().filter(function(p) { return p.id !== id; }));
+            loadPosts(); updateStats();
+            showToast('Post deleted.', 'info');
+        };
+
+        window.togglePin = function(id) {
+            savePosts(getPosts().map(function(p) { return p.id === id ? Object.assign({}, p, { pinned: !p.pinned }) : p; }));
+            loadPosts(); updateStats();
+            showToast('Post updated.');
+        };
+
+        // Clear all posts
+        (function() {
+            var btn = document.getElementById('clear-posts-btn');
+            btn.addEventListener('click', function() {
+                if (getPosts().length === 0) { showToast('No posts to clear.', 'info'); return; }
+                if (btn.dataset.confirm === 'true') {
+                    savePosts([]); loadPosts(); updateStats();
+                    showToast('All posts cleared.', 'info');
+                    btn.dataset.confirm = 'false';
+                    btn.innerHTML = '<span class="iconify text-sm" data-icon="lucide:trash-2"></span> Clear All';
+                    btn.classList.remove('!text-red-400');
+                } else {
+                    btn.dataset.confirm = 'true';
+                    btn.innerHTML = '<span class="iconify text-sm" data-icon="lucide:alert-circle"></span> Click to confirm';
+                    btn.classList.add('!text-red-400');
+                    setTimeout(function() {
+                        btn.dataset.confirm = 'false';
+                        btn.innerHTML = '<span class="iconify text-sm" data-icon="lucide:trash-2"></span> Clear All';
+                        btn.classList.remove('!text-red-400');
+                    }, 3000);
+                }
+            });
+        })();
+
+        // ===== PLAYERS =====
+        function loadPlayers() {
+            var players = getPlayers();
+            var container = document.getElementById('players-list');
+            var empty = document.getElementById('empty-players');
+            var label = document.getElementById('player-count-label');
+            label.textContent = players.length;
+            if (players.length === 0) { container.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+
+            container.innerHTML = players.map(function(p) {
+                return '<div class="bg-g-900 border border-g-800 rounded-xl p-4 sm:p-5">' +
+                    '<div class="flex items-center gap-4">' +
+                    '<img src="' + (p.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(p.name) + '&background=424242&color=f5f5f5&size=80&bold=true') + '" alt="" class="w-12 h-12 rounded-xl object-cover border border-g-700 shrink-0" onerror="this.src=\'https://ui-avatars.com/api/?name=' + encodeURIComponent(p.name) + '&background=424242&color=f5f5f5&size=80&bold=true\'">' +
+                    '<div class="flex-1 min-w-0">' +
+                    '<div class="flex items-center gap-2 mb-0.5 flex-wrap">' +
+                    '<span class="text-g-100 font-semibold text-sm">' + p.name + '</span>' +
+                    getRankBadgeHTML(p.rank) +
+                    '</div>' +
+                    '<div class="flex items-center gap-1.5">' +
+                    '<span class="iconify text-[#5865F2] text-xs" data-icon="ic:baseline-discord"></span>' +
+                    '<span class="text-g-500 text-xs">' + p.discord + '</span>' +
+                    '</div>' +
+                    '<p class="text-g-600 text-xs mt-1 truncate">' + p.description + '</p>' +
+                    '</div>' +
+                    '<div class="flex items-center gap-1 shrink-0">' +
+                    '<button onclick="editPlayer(' + p.id + ')" title="Edit" class="w-8 h-8 rounded-lg bg-g-800 hover:bg-g-700 flex items-center justify-center transition-colors">' +
+                    '<span class="iconify text-g-400 text-sm" data-icon="lucide:pencil"></span></button>' +
+                    '<button onclick="deletePlayer(' + p.id + ')" title="Remove" class="w-8 h-8 rounded-lg bg-g-800 hover:bg-red-900/50 flex items-center justify-center transition-colors group">' +
+                    '<span class="iconify text-g-400 group-hover:text-red-400 text-sm" data-icon="lucide:trash-2"></span></button>' +
+                    '</div></div></div>';
+            }).join('');
+        }
+
+        // Live preview
+        var previewFields = ['player-name', 'player-discord', 'player-rank', 'player-avatar', 'player-skin', 'player-desc'];
+        previewFields.forEach(function(fid) {
+            document.getElementById(fid).addEventListener('input', updatePlayerPreview);
+        });
+
+        function updatePlayerPreview() {
+            var name = document.getElementById('player-name').value.trim();
+            var discord = document.getElementById('player-discord').value.trim();
+            var rank = document.getElementById('player-rank').value;
+            var avatar = document.getElementById('player-avatar').value.trim();
+            var skin = document.getElementById('player-skin').value.trim();
+            var desc = document.getElementById('player-desc').value.trim();
+
+            var preview = document.getElementById('player-preview');
+            if (!name && !discord && !desc) { preview.classList.add('hidden'); return; }
+            preview.classList.remove('hidden');
+
+            document.getElementById('preview-name').textContent = name || 'Player Name';
+            document.getElementById('preview-discord').textContent = discord || '@handle';
+            document.getElementById('preview-rank').textContent = rank || 'Rank';
+            document.getElementById('preview-desc').textContent = desc || 'Description...';
+
+            var avSrc = avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name || 'P') + '&background=424242&color=f5f5f5&size=200&bold=true';
+            document.getElementById('preview-avatar').src = avSrc;
+
+            if (skin) {
+                document.getElementById('preview-skin').src = skin;
+                document.getElementById('preview-skin').classList.remove('hidden');
+            } else {
+                document.getElementById('preview-skin').classList.add('hidden');
+            }
+        }
+
+        // Submit player
+        document.getElementById('player-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var editId = document.getElementById('player-edit-id').value;
+            var name = document.getElementById('player-name').value.trim();
+            var discord = document.getElementById('player-discord').value.trim();
+            var rank = document.getElementById('player-rank').value;
+            var avatar = document.getElementById('player-avatar').value.trim();
+            var skin = document.getElementById('player-skin').value.trim();
+            var desc = document.getElementById('player-desc').value.trim();
+
+            if (!name || !discord || !rank || !desc) { showToast('Fill in all required fields.', 'error'); return; }
+
+            var players = getPlayers();
+
+            if (editId) {
+                // Editing
+                players = players.map(function(p) {
+                    if (p.id === parseInt(editId)) {
+                        return { id: p.id, name: name, discord: discord, rank: rank, avatar: avatar, skin: skin, description: desc };
+                    }
+                    return p;
+                });
+                savePlayers(players);
+                resetPlayerForm();
+                loadPlayers(); updateStats();
+                showToast('Player updated!');
+            } else {
+                // Adding
+                players.push({ id: Date.now(), name: name, discord: discord, rank: rank, avatar: avatar, skin: skin, description: desc });
+                savePlayers(players);
+                this.reset();
+                document.getElementById('player-preview').classList.add('hidden');
+                loadPlayers(); updateStats();
+                showToast('Player added!');
+            }
+        });
+
+        function resetPlayerForm() {
+            document.getElementById('player-form').reset();
+            document.getElementById('player-edit-id').value = '';
+            document.getElementById('player-preview').classList.add('hidden');
+            document.getElementById('player-form-title').textContent = 'Add New Player';
+            document.getElementById('player-form-subtitle').textContent = 'Add a member to the guild roster';
+            document.getElementById('player-submit-btn').innerHTML = '<span class="iconify text-base" data-icon="lucide:plus"></span> Add Player';
+            document.getElementById('player-cancel-btn').classList.add('hidden');
+        }
+
+        document.getElementById('player-cancel-btn').addEventListener('click', function() {
+            resetPlayerForm();
+        });
+
+        window.editPlayer = function(id) {
+            var players = getPlayers();
+            var p = players.find(function(pl) { return pl.id === id; });
+            if (!p) return;
+
+            document.getElementById('player-edit-id').value = p.id;
+            document.getElementById('player-name').value = p.name;
+            document.getElementById('player-discord').value = p.discord;
+            document.getElementById('player-rank').value = p.rank;
+            document.getElementById('player-avatar').value = p.avatar || '';
+            document.getElementById('player-skin').value = p.skin || '';
+            document.getElementById('player-desc').value = p.description;
+
+            document.getElementById('player-form-title').textContent = 'Edit Player';
+            document.getElementById('player-form-subtitle').textContent = 'Editing ' + p.name;
+            document.getElementById('player-submit-btn').innerHTML = '<span class="iconify text-base" data-icon="lucide:check"></span> Save Changes';
+            document.getElementById('player-cancel-btn').classList.remove('hidden');
+
+            updatePlayerPreview();
+
+            // Scroll to form
+            document.getElementById('player-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        window.deletePlayer = function(id) {
+            savePlayers(getPlayers().filter(function(p) { return p.id !== id; }));
+            loadPlayers(); updateStats();
+            showToast('Player removed.', 'info');
+        };
+
+        // Clear all players
+        (function() {
+            var btn = document.getElementById('clear-players-btn');
+            btn.addEventListener('click', function() {
+                if (getPlayers().length === 0) { showToast('No players to remove.', 'info'); return; }
+                if (btn.dataset.confirm === 'true') {
+                    savePlayers([]); loadPlayers(); updateStats();
+                    showToast('All players removed.', 'info');
+                    btn.dataset.confirm = 'false';
+                    btn.innerHTML = '<span class="iconify text-sm" data-icon="lucide:trash-2"></span> Remove All';
+                    btn.classList.remove('!text-red-400');
+                } else {
+                    btn.dataset.confirm = 'true';
+                    btn.innerHTML = '<span class="iconify text-sm" data-icon="lucide:alert-circle"></span> Click to confirm';
+                    btn.classList.add('!text-red-400');
+                    setTimeout(function() {
+                        btn.dataset.confirm = 'false';
+                        btn.innerHTML = '<span class="iconify text-sm" data-icon="lucide:trash-2"></span> Remove All';
+                        btn.classList.remove('!text-red-400');
+                    }, 3000);
+                }
+            });
+        })();
+
+        // ===== TICKETS =====
+        function loadTickets() {
+            var tickets = getTickets();
+            var container = document.getElementById('tickets-list');
+            var empty = document.getElementById('empty-tickets');
+            if (tickets.length === 0) { container.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            var reasonLabels = { join: 'Join Request', ally: 'Alliance', event: 'Event', other: 'Other' };
+            tickets.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+            container.innerHTML = tickets.map(function(t, i) {
+                return '<div class="bg-g-900 border border-g-800 rounded-xl p-5">' +
+                    '<div class="flex items-start justify-between gap-4"><div class="flex-1 min-w-0">' +
+                    '<div class="flex items-center gap-2 mb-2 flex-wrap">' +
+                    '<span class="text-g-100 font-semibold text-sm">' + t.name + '</span>' +
+                    '<span class="rank-badge px-1.5 py-0.5 rounded bg-g-800 text-g-400">' + (reasonLabels[t.reason] || t.reason) + '</span></div>' +
+                    '<div class="flex items-center gap-3 text-g-600 text-xs mb-2">' +
+                    '<span class="flex items-center gap-1"><span class="iconify text-[#5865F2] text-xs" data-icon="ic:baseline-discord"></span>' + t.discord + '</span>' +
+                    '<span>·</span><span>' + formatDate(t.date) + '</span></div>' +
+                    '<p class="text-g-400 text-sm leading-relaxed">' + t.message + '</p>' +
+                    '</div><button onclick="deleteTicket(' + i + ')" title="Delete" class="w-8 h-8 rounded-lg bg-g-800 hover:bg-red-900/50 flex items-center justify-center transition-colors group shrink-0">' +
+                    '<span class="iconify text-g-400 group-hover:text-red-400 text-sm" data-icon="lucide:trash-2"></span></button>' +
+                    '</div></div>';
+            }).join('');
+        }
+
+        window.deleteTicket = function(index) {
+            var tickets = getTickets();
+            tickets.splice(index, 1);
+            saveTickets(tickets);
+            loadTickets(); updateStats();
+            showToast('Ticket removed.', 'info');
+        };
+
+        // ===== REFRESH ALL =====
+        function refreshAll() {
+            loadPosts();
+            loadPlayers();
+            loadTickets();
+            updateStats();
+        }
+
+        // ===== INIT =====
+        checkAuth();
+    </script>
+</body>
+</html>
