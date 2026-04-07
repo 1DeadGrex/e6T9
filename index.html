@@ -18,7 +18,6 @@
         .card-hover{transition:transform .3s,box-shadow .3s,border-color .3s}.card-hover:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.35);border-color:#616161}
         .nav-link{position:relative}.nav-link::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:#bdbdbd;transition:width .3s}.nav-link:hover::after,.nav-link.active::after{width:100%}
         
-        /* Hero Blob Animation */
         .blob-bg {
             position: absolute;
             top: 50%;
@@ -162,16 +161,16 @@
                 <div class="fade-in text-center mb-12"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-g-900 border border-g-800 mb-4"><span class="iconify text-g-500 text-sm" data-icon="lucide:ticket"></span><span class="text-g-500 text-xs font-medium tracking-wide">OPEN A TICKET</span></div><h2 class="text-3xl md:text-4xl font-semibold text-g-100 tracking-tight">Connect With Us</h2></div>
                 <form id="ticket-form" class="fade-in bg-g-900 border border-g-800 rounded-xl p-6 sm:p-8 space-y-5">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div><label class="block text-g-300 text-sm font-medium mb-2">Your IGN</label><input type="text" id="ticket-name" name="name" required placeholder="Enter username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                        <div><label class="block text-g-300 text-sm font-medium mb-2">Discord Handle</label><input type="text" id="ticket-discord" name="discord" required placeholder="@username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                        <div><label class="block text-g-300 text-sm font-medium mb-2">Your IGN</label><input type="text" id="ticket-name" name="player_name" required placeholder="Enter username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                        <div><label class="block text-g-300 text-sm font-medium mb-2">Discord Handle</label><input type="text" id="ticket-discord" name="discord_handle" required placeholder="@username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
                     </div>
                     <div><label class="block text-g-300 text-sm font-medium mb-2">Reason</label><select id="ticket-reason" name="reason" required class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors appearance-none cursor-pointer"><option value="" class="bg-g-800">Select a reason</option><option value="join" class="bg-g-800">I want to join 6T9</option><option value="ally" class="bg-g-800">Alliance inquiry</option><option value="event" class="bg-g-800">Event collaboration</option><option value="other" class="bg-g-800">Other</option></select></div>
                     <div><label class="block text-g-300 text-sm font-medium mb-2">Message</label><textarea id="ticket-message" name="message" rows="3" required placeholder="Tell us about yourself..." class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
                     <div id="join-fields" class="join-field space-y-5 pt-2">
                         <div class="border-t border-g-800 pt-5"><p class="text-g-400 text-xs font-medium mb-4 tracking-wide flex items-center gap-2"><span class="iconify text-sm" data-icon="lucide:info"></span> ADDITIONAL INFO FOR JOIN REQUESTS</p>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div><label class="block text-g-300 text-sm font-medium mb-2">Bedwars Level</label><input type="text" id="ticket-bw" name="bw_level" placeholder="e.g. 500+" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                                <div><label class="block text-g-300 text-sm font-medium mb-2">Previous Guilds</label><input type="text" id="ticket-prev" name="prev_guilds" placeholder="e.g. None, SkyLegion" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                                <div><label class="block text-g-300 text-sm font-medium mb-2">Bedwars Level</label><input type="text" id="ticket-bw" name="bedwars_level" placeholder="e.g. 500+" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                                <div><label class="block text-g-300 text-sm font-medium mb-2">Previous Guilds</label><input type="text" id="ticket-prev" name="previous_guilds" placeholder="e.g. None, SkyLegion" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
                             </div>
                             <div><label class="block text-g-300 text-sm font-medium mb-2">Reason for Joining 6T9</label><textarea id="ticket-joinreason" name="join_reason" rows="2" placeholder="Why do you want to join us specifically?" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
                             <div><label class="block text-g-300 text-sm font-medium mb-2">Alt Accounts</label><input type="text" id="ticket-alts" name="alts" placeholder="List any alt accounts (IGNs)" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
@@ -219,7 +218,18 @@
         var fo=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');fo.unobserve(x.target)}})},{threshold:0.1});
         document.querySelectorAll('.fade-in').forEach(function(el){fo.observe(el)});
 
-        function toast(m,t){t=t||'success';var c=document.getElementById('toast-container'),d=document.createElement('div');var b=t==='success'?'border-green-500':t==='error'?'border-red-400':'border-g-600';var i=t==='success'?'lucide:check-circle':t==='error'?'lucide:alert-circle':'lucide:info';d.className='toast flex items-center gap-3 px-5 py-3 rounded-lg bg-g-800 border '+b+' shadow-lg max-w-sm';d.innerHTML='<span class="iconify text-g-300 text-lg shrink-0" data-icon="'+i+'"></span><span class="text-g-100 text-sm font-medium">'+m+'</span>';c.appendChild(d);setTimeout(function(){d.remove()},4000)}
+        function toast(m,t){
+            t=t||'success';
+            var c=document.getElementById('toast-container'),d=document.createElement('div');
+            var bc=t==='success'?'border-green-500/60':t==='error'?'border-red-400/60':'border-g-600';
+            var bg=t==='success'?'bg-green-950/80':t==='error'?'bg-red-950/80':'bg-g-800';
+            var ic=t==='success'?'lucide:check-circle':t==='error'?'lucide:alert-circle':'lucide:info';
+            var icColor=t==='success'?'text-green-400':t==='error'?'text-red-400':'text-g-300';
+            d.className='toast flex items-center gap-3 px-5 py-3 rounded-lg border '+bc+' '+bg+' shadow-lg max-w-sm backdrop-blur-sm';
+            d.innerHTML='<span class="iconify '+icColor+' text-lg shrink-0" data-icon="'+ic+'"></span><span class="text-g-100 text-sm font-medium">'+m+'</span>';
+            c.appendChild(d);
+            setTimeout(function(){d.remove()},4000);
+        }
 
         function fmtD(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
         function rCls(r){return{'Leader':'rank-leader','Co-Leader':'rank-coleader','Officer':'rank-officer','Veteran':'rank-veteran','Member':'rank-member'}[r]||'rank-member'}
@@ -227,42 +237,77 @@
 
         document.getElementById('ticket-reason').addEventListener('change',function(){document.getElementById('join-fields').classList.toggle('show',this.value==='join')});
 
-        // TICKET SUBMISSION LOGIC (FIXED)
+        // ===== TICKET SUBMISSION (FIXED — field names match admin panel) =====
         document.getElementById('ticket-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             var btn = document.getElementById('ticket-submit-btn');
             var originalHtml = btn.innerHTML;
             
-            // Get form values
+            var playerName = document.getElementById('ticket-name').value.trim();
+            var discordHandle = document.getElementById('ticket-discord').value.trim();
+            var reason = document.getElementById('ticket-reason').value;
+            var message = document.getElementById('ticket-message').value.trim();
+
+            if (!playerName || !discordHandle || !reason || !message) {
+                toast('Please fill in all required fields.', 'error');
+                return;
+            }
+
+            // Build ticket object with column names that MATCH the Supabase table
+            // (same names the admin panel reads: player_name, discord_handle, etc.)
             var ticketData = {
-                name: document.getElementById('ticket-name').value,
-                discord: document.getElementById('ticket-discord').value,
-                reason: document.getElementById('ticket-reason').value,
-                message: document.getElementById('ticket-message').value,
-                bw_level: document.getElementById('ticket-bw').value || null,
-                prev_guilds: document.getElementById('ticket-prev').value || null,
-                join_reason: document.getElementById('ticket-joinreason').value || null,
-                alts: document.getElementById('ticket-alts').value || null,
-                created_at: new Date().toISOString()
+                player_name: playerName,
+                discord_handle: discordHandle,
+                reason: reason,
+                message: message
             };
 
+            // Only attach join-specific fields if reason is "join"
+            if (reason === 'join') {
+                var bw = document.getElementById('ticket-bw').value.trim();
+                var prev = document.getElementById('ticket-prev').value.trim();
+                var joinReason = document.getElementById('ticket-joinreason').value.trim();
+                var alts = document.getElementById('ticket-alts').value.trim();
+                if (bw) ticketData.bedwars_level = bw;
+                if (prev) ticketData.previous_guilds = prev;
+                if (joinReason) ticketData.join_reason = joinReason;
+                if (alts) ticketData.alts = alts;
+            }
+
+            // Do NOT manually set created_at — let Supabase handle it via default
+
             try {
-                // Disable button and show loading state
                 btn.disabled = true;
-                btn.innerHTML = '<span class="iconify animate-spin" data-icon="lucide:loader-2"></span> Sending...';
+                btn.innerHTML = '<span class="iconify animate-spin text-base" data-icon="lucide:loader-2"></span> Sending...';
 
-                // Insert into Supabase table named 'tickets'
-                var { error } = await sb.from('tickets').insert([ticketData]);
+                console.log('Submitting ticket:', ticketData);
 
-                if (error) throw error;
+                var { data, error } = await sb.from('tickets').insert([ticketData]);
 
-                // Success
-                toast('Ticket submitted successfully! We will contact you soon.', 'success');
+                if (error) {
+                    console.error('Supabase insert error:', error);
+                    throw error;
+                }
+
+                console.log('Ticket inserted:', data);
+
+                toast('Ticket submitted successfully! We\'ll reach out on Discord soon.', 'success');
                 this.reset();
                 document.getElementById('join-fields').classList.remove('show');
+
             } catch (err) {
-                console.error('Submission error:', err);
-                toast('Failed to send ticket. Please try again later.', 'error');
+                console.error('Ticket submission failed:', err);
+                var msg = 'Failed to submit ticket.';
+                if (err.message) {
+                    if (err.message.includes('row-level security') || err.message.includes('RLS')) {
+                        msg = 'Permission denied. The tickets table needs an RLS policy for anon inserts.';
+                    } else if (err.message.includes('relation') || err.message.includes('does not exist')) {
+                        msg = 'The "tickets" table doesn\'t exist yet in Supabase.';
+                    } else {
+                        msg = err.message;
+                    }
+                }
+                toast(msg, 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalHtml;
