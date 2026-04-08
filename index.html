@@ -49,6 +49,7 @@
         .rank-officer{background:#9e9e9e;color:#161616}
         .rank-veteran{background:#616161;color:#e0e0e0}
         .rank-member{background:#2a2a2a;color:#9e9e9e;border:1px solid #424242}
+        .skin-img{image-rendering:pixelated}
         #mobile-menu{max-height:0;overflow:hidden;transition:max-height .35s,opacity .3s;opacity:0;background:#161616;border-top:1px solid rgba(255,255,255,.06)}
         #mobile-menu.open{max-height:380px;opacity:1}
         #mobile-overlay{display:none;position:fixed;inset:0;top:64px;background:rgba(0,0,0,.5);z-index:45;backdrop-filter:blur(2px)}
@@ -57,6 +58,7 @@
         .yt-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px}
         .feature-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;background:#212121;border:1px solid #333;font-size:.75rem;color:#bdbdbd;transition:border-color .2s}
         .feature-pill:hover{border-color:#616161}
+        .info-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;background:#1e1e1e;border:1px solid #333;font-size:.65rem;color:#757575}
         .join-field{max-height:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease;opacity:0}
         .join-field.show{max-height:600px;opacity:1}
         #post-modal-overlay.show { opacity: 1; pointer-events: auto; }
@@ -96,12 +98,10 @@
         <div class="relative grid-bg overflow-hidden"><div class="absolute inset-0 bg-gradient-to-b from-g-950/50 via-transparent to-g-950"></div>
             <div class="relative max-w-7xl mx-auto px-5 sm:px-6 py-24 md:py-36 text-center"><div class="fade-in relative inline-block">
                 <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-g-900 border border-g-800 mb-8"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-g-400 text-xs font-medium tracking-wide">ACTIVE & RECRUITING</span></div>
-                
                 <div class="relative">
                     <div class="blob-bg"></div>
                     <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 relative z-10"><span class="text-g-50">6</span><span class="text-g-500">T</span><span class="text-g-50">9</span></h1>
                 </div>
-
                 <p class="text-g-400 text-lg md:text-xl font-light max-w-xl mx-auto mb-10 leading-relaxed relative z-10">A competitive gaming guild built on teamwork, strategy, and loyalty. Dominating servers since 2021.</p>
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10"><a href="#connect" class="w-full sm:w-auto px-8 py-3 rounded-lg bg-g-100 text-g-900 font-semibold text-sm hover:bg-g-200 transition-colors text-center">Join the Guild</a><a href="#players" class="w-full sm:w-auto px-8 py-3 rounded-lg border border-g-700 text-g-300 font-medium text-sm hover:border-g-500 hover:text-g-100 transition-all text-center">View Roster</a></div>
             </div></div>
@@ -161,19 +161,19 @@
                 <div class="fade-in text-center mb-12"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-g-900 border border-g-800 mb-4"><span class="iconify text-g-500 text-sm" data-icon="lucide:ticket"></span><span class="text-g-500 text-xs font-medium tracking-wide">OPEN A TICKET</span></div><h2 class="text-3xl md:text-4xl font-semibold text-g-100 tracking-tight">Connect With Us</h2></div>
                 <form id="ticket-form" class="fade-in bg-g-900 border border-g-800 rounded-xl p-6 sm:p-8 space-y-5">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div><label class="block text-g-300 text-sm font-medium mb-2">Your IGN</label><input type="text" id="ticket-name" name="player_name" required placeholder="Enter username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                        <div><label class="block text-g-300 text-sm font-medium mb-2">Discord Handle</label><input type="text" id="ticket-discord" name="discord_handle" required placeholder="@username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                        <div><label class="block text-g-300 text-sm font-medium mb-2">Your IGN</label><input type="text" id="ticket-name" required placeholder="Enter username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                        <div><label class="block text-g-300 text-sm font-medium mb-2">Discord Handle</label><input type="text" id="ticket-discord" required placeholder="@username" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
                     </div>
-                    <div><label class="block text-g-300 text-sm font-medium mb-2">Reason</label><select id="ticket-reason" name="reason" required class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors appearance-none cursor-pointer"><option value="" class="bg-g-800">Select a reason</option><option value="join" class="bg-g-800">I want to join 6T9</option><option value="ally" class="bg-g-800">Alliance inquiry</option><option value="event" class="bg-g-800">Event collaboration</option><option value="other" class="bg-g-800">Other</option></select></div>
-                    <div><label class="block text-g-300 text-sm font-medium mb-2">Message</label><textarea id="ticket-message" name="message" rows="3" required placeholder="Tell us about yourself..." class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
+                    <div><label class="block text-g-300 text-sm font-medium mb-2">Reason</label><select id="ticket-reason" required class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors appearance-none cursor-pointer"><option value="" class="bg-g-800">Select a reason</option><option value="join" class="bg-g-800">I want to join 6T9</option><option value="ally" class="bg-g-800">Alliance inquiry</option><option value="event" class="bg-g-800">Event collaboration</option><option value="other" class="bg-g-800">Other</option></select></div>
+                    <div><label class="block text-g-300 text-sm font-medium mb-2">Message</label><textarea id="ticket-message" rows="3" required placeholder="Tell us about yourself..." class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
                     <div id="join-fields" class="join-field space-y-5 pt-2">
                         <div class="border-t border-g-800 pt-5"><p class="text-g-400 text-xs font-medium mb-4 tracking-wide flex items-center gap-2"><span class="iconify text-sm" data-icon="lucide:info"></span> ADDITIONAL INFO FOR JOIN REQUESTS</p>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div><label class="block text-g-300 text-sm font-medium mb-2">Bedwars Level</label><input type="text" id="ticket-bw" name="bedwars_level" placeholder="e.g. 500+" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                                <div><label class="block text-g-300 text-sm font-medium mb-2">Previous Guilds</label><input type="text" id="ticket-prev" name="previous_guilds" placeholder="e.g. None, SkyLegion" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                                <div><label class="block text-g-300 text-sm font-medium mb-2">Bedwars Level</label><input type="text" id="ticket-bw" placeholder="e.g. 500+" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                                <div><label class="block text-g-300 text-sm font-medium mb-2">Previous Guilds</label><input type="text" id="ticket-prev" placeholder="e.g. None, SkyLegion" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
                             </div>
-                            <div><label class="block text-g-300 text-sm font-medium mb-2">Reason for Joining 6T9</label><textarea id="ticket-joinreason" name="join_reason" rows="2" placeholder="Why do you want to join us specifically?" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
-                            <div><label class="block text-g-300 text-sm font-medium mb-2">Alt Accounts</label><input type="text" id="ticket-alts" name="alts" placeholder="List any alt accounts (IGNs)" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
+                            <div><label class="block text-g-300 text-sm font-medium mb-2">Reason for Joining 6T9</label><textarea id="ticket-joinreason" rows="2" placeholder="Why do you want to join us specifically?" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
+                            <div><label class="block text-g-300 text-sm font-medium mb-2">Alt Accounts</label><input type="text" id="ticket-alts" placeholder="List any alt accounts (IGNs)" class="w-full px-4 py-3 rounded-lg bg-g-800 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
                         </div>
                     </div>
                     <button type="submit" id="ticket-submit-btn" class="w-full py-3 rounded-lg bg-g-100 text-g-900 font-semibold text-sm hover:bg-g-200 transition-colors flex items-center justify-center gap-2"><span class="iconify text-base" data-icon="lucide:send"></span> Submit Ticket</button>
@@ -204,32 +204,19 @@
         var SUPABASE_URL='https://eiaxbuwihclqcmogozzh.supabase.co';
         var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhidXdpaGNscWNtb2dvenpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0ODY2MDYsImV4cCI6MjA5MTA2MjYwNn0.KId9cODM_TbChE_tw3wF-NiIk66qOQq4GXhr6SeaelI';
         var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
         window.postsData = [];
 
-        // UI Helpers
         var mt=document.getElementById('menu-toggle'),mm=document.getElementById('mobile-menu'),mo=document.getElementById('mobile-overlay'),moi=mt.querySelector('.menu-open-icon'),mci=mt.querySelector('.menu-close-icon'),mO=false;
         function oM(){mO=true;mm.classList.add('open');mo.classList.add('open');document.body.classList.add('menu-open');moi.classList.add('hidden');mci.classList.remove('hidden')}
         function cM(){mO=false;mm.classList.remove('open');mo.classList.remove('open');document.body.classList.remove('menu-open');moi.classList.remove('hidden');mci.classList.add('hidden')}
         mt.addEventListener('click',function(e){e.stopPropagation();mO?cM():oM()});mo.addEventListener('click',cM);
         document.querySelectorAll('.mobile-link').forEach(function(l){l.addEventListener('click',cM)});
         document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(mO)cM(); window.closeModal(e, true);}});
-        
+
         var fo=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');fo.unobserve(x.target)}})},{threshold:0.1});
         document.querySelectorAll('.fade-in').forEach(function(el){fo.observe(el)});
 
-        function toast(m,t){
-            t=t||'success';
-            var c=document.getElementById('toast-container'),d=document.createElement('div');
-            var bc=t==='success'?'border-green-500/60':t==='error'?'border-red-400/60':'border-g-600';
-            var bg=t==='success'?'bg-green-950/80':t==='error'?'bg-red-950/80':'bg-g-800';
-            var ic=t==='success'?'lucide:check-circle':t==='error'?'lucide:alert-circle':'lucide:info';
-            var icColor=t==='success'?'text-green-400':t==='error'?'text-red-400':'text-g-300';
-            d.className='toast flex items-center gap-3 px-5 py-3 rounded-lg border '+bc+' '+bg+' shadow-lg max-w-sm backdrop-blur-sm';
-            d.innerHTML='<span class="iconify '+icColor+' text-lg shrink-0" data-icon="'+ic+'"></span><span class="text-g-100 text-sm font-medium">'+m+'</span>';
-            c.appendChild(d);
-            setTimeout(function(){d.remove()},4000);
-        }
+        function toast(m,t){t=t||'success';var c=document.getElementById('toast-container'),d=document.createElement('div');var b=t==='success'?'border-g-500':t==='error'?'border-red-400':'border-g-600';var i=t==='success'?'lucide:check-circle':t==='error'?'lucide:alert-circle':'lucide:info';d.className='toast flex items-center gap-3 px-5 py-3 rounded-lg bg-g-700 border '+b+' shadow-lg max-w-sm';d.innerHTML='<span class="iconify text-g-300 text-lg shrink-0" data-icon="'+i+'"></span><span class="text-g-100 text-sm font-medium">'+m+'</span>';c.appendChild(d);setTimeout(function(){d.remove()},4000)}
 
         function fmtD(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
         function rCls(r){return{'Leader':'rank-leader','Co-Leader':'rank-coleader','Officer':'rank-officer','Veteran':'rank-veteran','Member':'rank-member'}[r]||'rank-member'}
@@ -237,84 +224,43 @@
 
         document.getElementById('ticket-reason').addEventListener('change',function(){document.getElementById('join-fields').classList.toggle('show',this.value==='join')});
 
-        // ===== TICKET SUBMISSION (FIXED — field names match admin panel) =====
-        document.getElementById('ticket-form').addEventListener('submit', async function(e) {
+        // FIXED SUBMISSION LOGIC
+        document.getElementById('ticket-form').addEventListener('submit', async function(e){
             e.preventDefault();
-            var btn = document.getElementById('ticket-submit-btn');
-            var originalHtml = btn.innerHTML;
+            var btn = document.getElementById('ticket-submit-btn'), old = btn.innerHTML;
             
-            var playerName = document.getElementById('ticket-name').value.trim();
-            var discordHandle = document.getElementById('ticket-discord').value.trim();
-            var reason = document.getElementById('ticket-reason').value;
-            var message = document.getElementById('ticket-message').value.trim();
-
-            if (!playerName || !discordHandle || !reason || !message) {
-                toast('Please fill in all required fields.', 'error');
-                return;
-            }
-
-            // Build ticket object with column names that MATCH the Supabase table
-            // (same names the admin panel reads: player_name, discord_handle, etc.)
-            var ticketData = {
-                player_name: playerName,
-                discord_handle: discordHandle,
-                reason: reason,
-                message: message
+            // Map the field names to match what admin.html expects
+            var payload = {
+                player_name: document.getElementById('ticket-name').value,
+                discord_handle: document.getElementById('ticket-discord').value,
+                reason: document.getElementById('ticket-reason').value,
+                message: document.getElementById('ticket-message').value,
+                bedwars_level: document.getElementById('ticket-bw').value || null,
+                previous_guilds: document.getElementById('ticket-prev').value || null,
+                join_reason: document.getElementById('ticket-joinreason').value || null,
+                alts: document.getElementById('ticket-alts').value || null
+                // Note: removed manual created_at to let Supabase handle it
             };
-
-            // Only attach join-specific fields if reason is "join"
-            if (reason === 'join') {
-                var bw = document.getElementById('ticket-bw').value.trim();
-                var prev = document.getElementById('ticket-prev').value.trim();
-                var joinReason = document.getElementById('ticket-joinreason').value.trim();
-                var alts = document.getElementById('ticket-alts').value.trim();
-                if (bw) ticketData.bedwars_level = bw;
-                if (prev) ticketData.previous_guilds = prev;
-                if (joinReason) ticketData.join_reason = joinReason;
-                if (alts) ticketData.alts = alts;
-            }
-
-            // Do NOT manually set created_at — let Supabase handle it via default
 
             try {
                 btn.disabled = true;
-                btn.innerHTML = '<span class="iconify animate-spin text-base" data-icon="lucide:loader-2"></span> Sending...';
+                btn.innerHTML = '<span class="iconify animate-spin" data-icon="lucide:loader-2"></span> Sending...';
+                
+                var { error } = await sb.from('tickets').insert([payload]);
+                if(error) throw error;
 
-                console.log('Submitting ticket:', ticketData);
-
-                var { data, error } = await sb.from('tickets').insert([ticketData]);
-
-                if (error) {
-                    console.error('Supabase insert error:', error);
-                    throw error;
-                }
-
-                console.log('Ticket inserted:', data);
-
-                toast('Ticket submitted successfully! We\'ll reach out on Discord soon.', 'success');
+                toast('Ticket submitted successfully! We will contact you soon.');
                 this.reset();
                 document.getElementById('join-fields').classList.remove('show');
-
-            } catch (err) {
-                console.error('Ticket submission failed:', err);
-                var msg = 'Failed to submit ticket.';
-                if (err.message) {
-                    if (err.message.includes('row-level security') || err.message.includes('RLS')) {
-                        msg = 'Permission denied. The tickets table needs an RLS policy for anon inserts.';
-                    } else if (err.message.includes('relation') || err.message.includes('does not exist')) {
-                        msg = 'The "tickets" table doesn\'t exist yet in Supabase.';
-                    } else {
-                        msg = err.message;
-                    }
-                }
-                toast(msg, 'error');
+            } catch(err) {
+                console.error(err);
+                toast('Failed to send ticket. Please try again.', 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = originalHtml;
+                btn.innerHTML = old;
             }
         });
 
-        // Modal Logic
         window.openModal = function(index) {
             var post = window.postsData[index];
             if(!post) return;
