@@ -3,31 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="">
     <title>6T9 — Gaming Guild</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif']
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
                     },
                     colors: {
-                        g: {
-                            50: 'var(--g-50)',
-                            100: 'var(--g-100)',
-                            200: 'var(--g-200)',
-                            300: 'var(--g-300)',
-                            400: 'var(--g-400)',
-                            500: 'var(--g-500)',
-                            600: 'var(--g-600)',
-                            700: 'var(--g-700)',
-                            800: 'var(--g-800)',
-                            900: 'var(--g-900)',
-                            950: 'var(--g-950)'
+                        glass: {
+                            50: 'rgba(255,255,255,0.05)',
+                            100: 'rgba(255,255,255,0.08)',
+                            200: 'rgba(255,255,255,0.10)',
+                            300: 'rgba(255,255,255,0.15)',
+                            400: 'rgba(255,255,255,0.20)',
+                            500: 'rgba(255,255,255,0.30)',
+                            600: 'rgba(255,255,255,0.40)',
+                            700: 'rgba(255,255,255,0.60)',
+                            800: 'rgba(255,255,255,0.80)',
+                            900: '#ffffff'
                         }
                     }
                 }
@@ -35,571 +34,1511 @@
         }
     </script>
     <style>
-        /* CSS Variables for Light/Dark Theme Switching */
-        :root {
-            /* Default Dark Theme */
-            --g-50: #fafafa;
-            --g-100: #f5f5f5;
-            --g-200: #eeeeee;
-            --g-300: #e0e0e0;
-            --g-400: #bdbdbd;
-            --g-500: #9e9e9e;
-            --g-600: #757575;
-            --g-700: #616161;
-            --g-800: #424242;
-            --g-900: #212121;
-            --g-950: #161616;
-            --grid-color: rgba(255, 255, 255, 0.03);
-            --blob-bg: rgba(255, 255, 255, 0.15);
-            --nav-bg: rgba(22, 22, 22, 0.9);
-            --nav-border: rgba(255, 255, 255, 0.06);
-        }
-
-        body.light-theme {
-            /* Cool-Toned Light Theme Palette */
-            --g-950: #fafafa; 
-            --g-900: #e4e5f1; 
-            --g-800: #d2d3db; 
-            --g-700: #c1c2ce; 
-            --g-600: #a7a8b8;
-            --g-500: #9394a5; 
-            --g-400: #7b7d92;
-            --g-300: #64667d;
-            --g-200: #484b6a; 
-            --g-100: #484b6a; 
-            --g-50:  #2d2f44; 
-            --grid-color: rgba(72, 75, 106, 0.05);
-            --blob-bg: rgba(72, 75, 106, 0.15);
-            --nav-bg: rgba(250, 250, 250, 0.9);
-            --nav-border: rgba(72, 75, 106, 0.1);
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         html { scroll-behavior: smooth; }
-        body { background: var(--g-950); color: var(--g-100); transition: background-color 0.3s ease, color 0.3s ease; }
         
-        .bg-g-900, .bg-g-800, .bg-g-950, .border-g-800, .text-g-100, .text-g-300, .text-g-400, .text-g-500 {
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--g-900); }
-        ::-webkit-scrollbar-thumb { background: var(--g-700); border-radius: 4px; }
-        
-        .grid-bg { background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px); background-size: 60px 60px; }
-        .card-hover { transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, background-color 0.3s; }
-        .card-hover:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); border-color: var(--g-600); }
-        .nav-link { position: relative; }
-        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--g-400); transition: width 0.3s; }
-        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
-        
-        .blob-bg {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: var(--blob-bg);
-            border-radius: 50%;
-            filter: blur(40px);
-            z-index: 20; 
+        /* ============================================
+           VERTICAL SCROLL PROGRESS BAR
+           ============================================ */
+        .scroll-progress-container {
+            position: fixed;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 9999;
             pointer-events: none;
-            mix-blend-mode: overlay; 
-            animation: blobRoam 18s infinite linear alternate;
-        }
-        @keyframes blobRoam {
-            0% { top: 10%; left: 10%; transform: scale(1); }
-            25% { top: 80%; left: 80%; transform: scale(1.3); }
-            50% { top: 20%; left: 90%; transform: scale(0.8); }
-            75% { top: 70%; left: 20%; transform: scale(1.2); }
-            100% { top: 40%; left: 50%; transform: scale(1); }
+            height: 50vh;
+            display: flex;
+            align-items: center;
         }
 
-        .toast { animation: slideIn .4s ease, fadeOut .4s ease 2.6s forwards; }
+        .scroll-progress-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            line-height: 1;
+            position: relative;
+            color: rgba(255, 255, 255, 0.08);
+        }
+
+        .scroll-progress-text::before {
+            content: 'SIXTY NINE';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            text-transform: uppercase;
+            line-height: inherit;
+            background: linear-gradient(180deg, 
+                #fa7a3e 0%, 
+                #ea6e92 25%, 
+                #b92232 50%, 
+                #6b2979 75%, 
+                #06070b 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            mask-image: linear-gradient(to bottom, 
+                black var(--scroll-percent), 
+                transparent var(--scroll-percent)
+            );
+            -webkit-mask-image: linear-gradient(to bottom, 
+                black var(--scroll-percent), 
+                transparent var(--scroll-percent)
+            );
+        }
+
+        .scroll-progress-glow {
+            position: absolute;
+            inset: -30px -50px;
+            background: radial-gradient(ellipse at center, 
+                rgba(250,122,62,0.12) 0%, 
+                transparent 70%
+            );
+            filter: blur(30px);
+            opacity: var(--scroll-opacity, 0);
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           HERO SECTION - PREMIUM MINIMALIST DESIGN
+           ============================================ */
+        
+        /* Static Gradient Background (Your Image Style) */
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* 🔧 YOUR GRADIENT - Matches your reference image perfectly */
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(107, 41, 121, 0.4) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(185, 34, 50, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(234, 110, 146, 0.35) 0%, transparent 50%),
+                linear-gradient(135deg, 
+                    #0c0c1d 0%,
+                    #1a1035 15%,
+                    #2d1540 30%,
+                    #4a1942 45%,
+                    #6b2979 60%,
+                    #b92232 75%,
+                    #ea6e92 88%,
+                    #fa7a3e 95%,
+                    #ff8a5c 100%
+                );
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Subtle noise texture overlay for depth */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E/filter%3E/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        /* Vignette effect for focus */
+        .hero-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 90%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Giant Background Text (Subtler) */
+        .hero-bg-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        .hero-bg-text h1 {
+            font-size: clamp(12rem, 25vw, 28rem);
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -0.06em;
+            color: rgba(255, 255, 255, 0.02);
+            white-space: nowrap;
+            transform: translateY(-5%);
+        }
+
+        /* Content Container */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px;
+            text-align: center;
+        }
+
+        /* Status Badge - More refined */
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 48px;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        /* Main Title - Ultra Bold & Large */
+        .hero-title {
+            font-size: clamp(4rem, 10vw, 9rem);
+            font-weight: 900;
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            margin-bottom: 32px;
+            animation: fadeInUp 1s ease 0.5s both;
+            background: linear-gradient(180deg, 
+                #ffffff 0%, 
+                rgba(255, 255, 255, 0.95) 50%,
+                rgba(255, 255, 255, 0.6) 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Subtitle - Lighter weight */
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            font-weight: 300;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.45);
+            max-width: 520px;
+            margin: 0 auto 56px;
+            animation: fadeInUp 1s ease 0.7s both;
+        }
+
+        /* CTA Buttons Container */
+        .hero-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.9s both;
+        }
+
+        @media (min-width: 640px) {
+            .hero-actions {
+                flex-direction: row;
+                gap: 20px;
+            }
+        }
+
+        /* Primary CTA - Glass with glow */
+        .cta-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 40px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000000;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 24px rgba(0, 0, 0, 0.2),
+                0 0 48px rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 64px rgba(255, 255, 255, 0.15);
+        }
+
+        .cta-primary:hover::before {
+            opacity: 1;
+        }
+
+        /* Secondary CTA - Ghost style */
+        .cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 40px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           OTHER SECTIONS (Keep as before)
+           ============================================ */
+
+        /* Orbs (subtle, non-animated) */
+        .orb-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.12;
+        }
+        
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%); top: -200px; left: -200px; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236,72,153,0.12), transparent 70%); top: 50%; right: -150px; }
+        .orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(34,211,238,0.12), transparent 70%); bottom: -100px; left: 30%; }
+
+        /* Grid Pattern */
+        .grid-pattern {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(circle at center, black 0%, transparent 80%);
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 
+                0 16px 48px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                0 0 60px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Glass Nav */
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Glass Input */
+        .glass-input {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-input:focus {
+            outline: none;
+            border-color: rgba(99, 102, 241, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+        
+        .glass-input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+        /* Buttons */
+        .glass-btn-primary {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-btn-primary:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Section Typography */
+        .section-title-bg {
+            position: absolute;
+            font-size: clamp(8rem, 15vw, 16rem);
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            color: rgba(255, 255, 255, 0.03);
+            white-space: nowrap;
+            z-index: 0;
+            user-select: none;
+            pointer-events: none;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: max-content;
+            max-width: 120%;
+        }
+        
+        .section-wrapper {
+            position: relative;
+            padding: 120px 0;
+            overflow: hidden;
+        }
+        
+        .section-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Rank Badges */
+        .rank-badge { 
+            font-size: 0.65rem; 
+            letter-spacing: 0.08em; 
+            text-transform: uppercase; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
+            font-weight: 700; 
+            display: inline-block;
+            backdrop-filter: blur(8px);
+        }
+        .rank-leader { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+        .rank-coleader { background: rgba(255,255,255,0.1); color: #ddd; border: 1px solid rgba(255,255,255,0.2); }
+        .rank-officer { background: rgba(255,255,255,0.07); color: #bbb; }
+        .rank-veteran { background: rgba(255,255,255,0.04); color: #888; border: 1px solid rgba(255,255,255,0.1); }
+        .rank-member { background: rgba(255,255,255,0.02); color: #666; border: 1px solid rgba(255,255,255,0.06); }
+
+        /* Info Chips */
+        .info-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Toast */
+        .toast { 
+            animation: slideIn .4s ease, fadeOut .4s ease 2.6s forwards; 
+            backdrop-filter: blur(20px);
+        }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity .6s, transform .6s; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-        
-        .rank-badge { font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-        .rank-leader { background: var(--g-100); color: var(--g-950); border: 1px solid var(--g-300); }
-        .rank-coleader { background: var(--g-300); color: var(--g-950); border: 1px solid var(--g-400); }
-        .rank-officer { background: var(--g-500); color: var(--g-950); }
-        .rank-veteran { background: var(--g-700); color: var(--g-200); }
-        .rank-member { background: var(--g-900); color: var(--g-500); border: 1px solid var(--g-800); }
-        
+
+        /* Fade In Animation */
+        .fade-in { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .fade-in.visible { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        /* Skin Image */
         .skin-img { image-rendering: pixelated; }
-        #mobile-menu { max-height: 0; overflow: hidden; transition: max-height .35s, opacity .3s; opacity: 0; background: var(--g-950); border-top: 1px solid var(--nav-border); }
-        #mobile-menu.open { max-height: 420px; opacity: 1; }
-        #mobile-overlay { display: none; position: fixed; inset: 0; top: 64px; background: rgba(0,0,0,.5); z-index: 45; backdrop-filter: blur(2px); }
-        #mobile-overlay.open { display: block; } body.menu-open { overflow: hidden; }
-        .yt-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; border: 1px solid var(--g-800); }
-        .yt-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; border-radius: 12px; }
-        .feature-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; background: var(--g-900); border: 1px solid var(--g-800); font-size: .75rem; color: var(--g-400); transition: border-color .2s; }
-        .feature-pill:hover { border-color: var(--g-600); }
-        .info-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;background:var(--g-800);border:1px solid var(--g-700);font-size:.65rem;color:var(--g-200)}
-        .join-field { max-height: 0; overflow: hidden; transition: max-height .4s ease, opacity .3s ease; opacity: 0; }
-        .join-field.show { max-height: 600px; opacity: 1; }
-        #post-modal-overlay.show { opacity: 1; pointer-events: auto; }
-        #post-modal-overlay.show #post-modal-content { transform: scale(1); }
+
+        /* Mobile Menu */
+        #mobile-menu { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; 
+            opacity: 0; 
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(24px);
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        #mobile-menu.open { 
+            max-height: 480px; 
+            opacity: 1; 
+        }
+        #mobile-overlay { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            top: 64px; 
+            background: rgba(0,0,0,0.6); 
+            z-index: 45; 
+            backdrop-filter: blur(4px); 
+        }
+        #mobile-overlay.open { display: block; } 
+        
+        body.menu-open { overflow: hidden; }
+
+        /* YouTube Wrapper */
+        .yt-wrapper { 
+            position: relative; 
+            padding-bottom: 56.25%; 
+            height: 0; 
+            overflow: hidden; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+        }
+        .yt-wrapper iframe { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+            border-radius: 20px; 
+        }
+
+        /* Feature Pills */
+        .feature-pill { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            background: rgba(255,255,255,0.04); 
+            border: 1px solid rgba(255,255,255,0.08); 
+            font-size: 0.75rem; 
+            color: rgba(255,255,255,0.6); 
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+        .feature-pill:hover { 
+            background: rgba(255,255,255,0.08); 
+            border-color: rgba(255,255,255,0.2); 
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Join Fields */
+        .join-field { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; 
+            opacity: 0; 
+        }
+        .join-field.show { 
+            max-height: 800px; 
+            opacity: 1; 
+        }
+
+        /* Modal */
+        #post-modal-overlay.show { 
+            opacity: 1; 
+            pointer-events: auto; 
+        }
+        #post-modal-overlay.show #post-modal-content { 
+            transform: scale(1); 
+        }
+        #post-modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        /* Nav Link Hover */
+        .nav-link { 
+            position: relative; 
+            transition: color 0.3s ease;
+        }
+        .nav-link::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -4px; 
+            left: 0; 
+            width: 0; 
+            height: 2px; 
+            background: linear-gradient(90deg, #6366f1, #ec4899);
+            border-radius: 2px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .nav-link:hover::after, .nav-link.active::after { 
+            width: 100%; 
+        }
+
+        /* Discord Button Glow */
+        .discord-glow {
+            box-shadow: 0 0 20px rgba(88,101,242,0.3);
+            transition: box-shadow 0.3s ease;
+        }
+        .discord-glow:hover {
+            box-shadow: 0 0 30px rgba(88,101,242,0.5);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .scroll-progress-container {
+                left: 12px;
+                height: 40vh;
+            }
+            .scroll-progress-text {
+                font-size: 11px;
+            }
+            .hero-content {
+                padding: 100px 20px;
+            }
+            .hero-title {
+                font-size: clamp(3rem, 12vw, 6rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .scroll-progress-container {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen">
-    <div id="toast-container" class="fixed top-24 right-6 z-[100] flex flex-col gap-3"></div>
-    <div id="mobile-overlay"></div>
 
-    <nav class="fixed top-0 left-0 right-0 z-50 transition-colors duration-300" style="background:var(--nav-bg);backdrop-filter:blur(12px);border-bottom:1px solid var(--nav-border)">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
-            <a href="#home" class="flex items-center gap-2.5 shrink-0"><div class="w-9 h-9 rounded-lg bg-g-800 border border-g-700 flex items-center justify-center"><span class="text-g-300 font-bold text-sm">6T9</span></div><span class="text-g-100 font-semibold text-lg tracking-tight">6T9</span></a>
-            <div class="hidden md:flex items-center gap-8">
-                <a href="#home" class="nav-link text-g-400 hover:text-g-100 text-sm font-medium transition-colors active">Home</a>
-                <a href="#bot" class="nav-link text-g-400 hover:text-g-100 text-sm font-medium transition-colors">Bot</a>
-                <a href="#gallery" class="nav-link text-g-400 hover:text-g-100 text-sm font-medium transition-colors">Gallery</a>
-                <a href="#allies" class="nav-link text-g-400 hover:text-g-100 text-sm font-medium transition-colors">Allies</a>
-                <a href="#players" class="nav-link text-g-400 hover:text-g-100 text-sm font-medium transition-colors">Players</a>
-                <a href="#connect" class="nav-link text-g-400 hover:text-g-100 text-sm font-medium transition-colors">Connect</a>
-            </div>
-            <div class="flex items-center gap-3">
-                <button id="theme-toggle" type="button" class="w-9 h-9 flex items-center justify-center rounded-lg bg-g-900 border border-g-800 text-g-300 hover:text-g-100 transition-colors" title="Toggle Theme"></button>
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-g-900 border border-g-800"><span class="iconify text-g-500 text-sm" data-icon="lucide:users"></span><span class="text-g-300 text-xs font-medium">Members: <span class="text-g-100">47</span></span></div>
-                <a href="https://discord.gg/6XANkGEsxg" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-medium transition-colors"><span class="iconify text-base" data-icon="ic:baseline-discord"></span><span class="hidden sm:inline">Discord</span></a>
-                <button id="menu-toggle" type="button" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-g-900 border border-g-800 text-g-300 hover:text-g-100 transition-colors" aria-label="Toggle menu"><span class="iconify text-xl menu-open-icon" data-icon="lucide:menu"></span><span class="iconify text-xl menu-close-icon hidden" data-icon="lucide:x"></span></button>
-            </div>
-        </div>
-        <div id="mobile-menu"><div class="px-5 py-4 flex flex-col gap-1">
-            <a href="#home" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-lg text-g-300 hover:text-g-100 hover:bg-g-900 text-sm font-medium transition-colors"><span class="iconify text-g-500 text-lg" data-icon="lucide:home"></span> Home</a>
-            <a href="#bot" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-lg text-g-300 hover:text-g-100 hover:bg-g-900 text-sm font-medium transition-colors"><span class="iconify text-g-500 text-lg" data-icon="lucide:bot"></span> Bot</a>
-            <a href="#gallery" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-lg text-g-300 hover:text-g-100 hover:bg-g-900 text-sm font-medium transition-colors"><span class="iconify text-g-500 text-lg" data-icon="lucide:image"></span> Gallery</a>
-            <a href="#allies" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-lg text-g-300 hover:text-g-100 hover:bg-g-900 text-sm font-medium transition-colors"><span class="iconify text-g-500 text-lg" data-icon="lucide:link"></span> Allies</a>
-            <a href="#players" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-lg text-g-300 hover:text-g-100 hover:bg-g-900 text-sm font-medium transition-colors"><span class="iconify text-g-500 text-lg" data-icon="lucide:gamepad-2"></span> Players</a>
-            <a href="#connect" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-lg text-g-300 hover:text-g-100 hover:bg-g-900 text-sm font-medium transition-colors"><span class="iconify text-g-500 text-lg" data-icon="lucide:ticket"></span> Connect</a>
-        </div></div>
-    </nav>
+<!-- ===== BACKGROUND EFFECTS ===== -->
+<div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+<div class="grid-pattern"></div>
 
-    <section id="home" class="pt-16 relative overflow-hidden">
-        <div class="blob-bg"></div> 
-        
-        <div class="relative grid-bg"><div class="absolute inset-0 bg-gradient-to-b from-g-950/50 via-transparent to-g-950"></div>
-            <div class="relative max-w-7xl mx-auto px-5 sm:px-6 py-24 md:py-36 text-center"><div class="fade-in relative inline-block z-10">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-g-900 border border-g-800 mb-8"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-g-400 text-xs font-medium tracking-wide">ACTIVE & RECRUITING</span></div>
-                
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 relative z-10"><span class="text-g-50">6</span><span class="text-g-500">T</span><span class="text-g-50">9</span></h1>
+<!-- ===== SCROLL PROGRESS BAR ===== -->
+<div class="scroll-progress-container">
+    <div class="scroll-progress-glow"></div>
+    <div class="scroll-progress-text">SIXTY NINE</div>
+</div>
 
-                <p class="text-g-400 text-lg md:text-xl font-light max-w-xl mx-auto mb-10 leading-relaxed relative z-10">A competitive gaming guild built on teamwork, strategy, and loyalty. Dominating servers since 2021.</p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10"><a href="#connect" class="w-full sm:w-auto px-8 py-3 rounded-lg bg-g-100 text-g-900 font-semibold text-sm hover:bg-g-200 transition-colors text-center">Join the Guild</a><a href="#players" class="w-full sm:w-auto px-8 py-3 rounded-lg border border-g-700 text-g-300 font-medium text-sm hover:border-g-500 hover:text-g-100 transition-all text-center">View Roster</a></div>
-            </div></div>
-        </div>
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-20 relative z-10">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl p-6"><div class="w-10 h-10 rounded-lg bg-g-800 flex items-center justify-center mb-4"><span class="iconify text-g-400 text-xl" data-icon="lucide:shield"></span></div><h3 class="text-g-100 font-semibold text-base mb-2">Creation</h3><p class="text-g-500 text-sm leading-relaxed">Founded in March 2021 by dedicated players with a shared vision.</p><p class="text-g-600 text-xs mt-3 font-medium">EST. 2021</p></div>
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl p-6" style="transition-delay:.1s"><div class="w-10 h-10 rounded-lg bg-g-800 flex items-center justify-center mb-4"><span class="iconify text-g-400 text-xl" data-icon="lucide:swords"></span></div><h3 class="text-g-100 font-semibold text-base mb-2">Performance</h3><p class="text-g-500 text-sm leading-relaxed">Top 5% across competitive events. 142 tournament wins and counting.</p><p class="text-g-600 text-xs mt-3 font-medium">142 WINS</p></div>
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl p-6" style="transition-delay:.2s"><div class="w-10 h-10 rounded-lg bg-g-800 flex items-center justify-center mb-4"><span class="iconify text-g-400 text-xl" data-icon="lucide:trophy"></span></div><h3 class="text-g-100 font-semibold text-base mb-2">Placement</h3><p class="text-g-500 text-sm leading-relaxed">Server rank #3 globally. Top-5 for 8 consecutive seasons.</p><p class="text-g-600 text-xs mt-3 font-medium">#3 GLOBAL</p></div>
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl p-6" style="transition-delay:.3s"><div class="w-10 h-10 rounded-lg bg-g-800 flex items-center justify-center mb-4"><span class="iconify text-g-400 text-xl" data-icon="lucide:clock"></span></div><h3 class="text-g-100 font-semibold text-base mb-2">History</h3><p class="text-g-500 text-sm leading-relaxed">From a 5-man squad to a 47-member powerhouse. Built on resilience.</p><p class="text-g-600 text-xs mt-3 font-medium">4 YEARS STRONG</p></div>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 pb-24 relative z-10">
-            <div class="fade-in flex items-center justify-between mb-8"><div><h2 class="text-2xl md:text-3xl font-semibold text-g-100 tracking-tight">Announcements</h2><p class="text-g-500 text-sm mt-1">Latest updates from guild admin</p></div><span class="iconify text-g-700 text-2xl" data-icon="lucide:message-square"></span></div>
-            <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"><p class="text-g-600 text-sm text-center py-8 col-span-full">Loading...</p></div>
-            <div id="no-posts" class="hidden text-center py-16"><span class="iconify text-g-800 text-5xl mx-auto mb-4" data-icon="lucide:inbox"></span><p class="text-g-600 text-sm">No announcements yet.</p></div>
-        </div>
-    </section>
+<!-- Toast Container -->
+<div id="toast-container" class="fixed top-24 right-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
 
-    <section id="bot" class="border-t border-g-800">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-24">
-            <div class="fade-in text-center mb-16"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-g-900 border border-g-800 mb-4"><span class="iconify text-g-500 text-sm" data-icon="lucide:bot"></span><span class="text-g-500 text-xs font-medium tracking-wide">6T9 DISCORD BOT</span></div><h2 class="text-3xl md:text-4xl font-semibold text-g-100 tracking-tight">Meet the 6T9 Bot</h2><p class="text-g-500 text-sm mt-3 max-w-lg mx-auto">Our custom Discord bot that powers guild operations.</p></div>
-            <div class="fade-in grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start mb-16">
-                <div class="lg:col-span-3"><div class="yt-wrapper shadow-2xl shadow-black/10"><iframe src="https://www.youtube.com/embed/-vCsHUAXx1Y?si=WfClSTMqlYlYsEYR" title="6T9 Bot" allowfullscreen loading="lazy"></iframe></div></div>
-                <div class="lg:col-span-2 flex flex-col gap-6">
-                    <div><h3 class="text-g-100 font-semibold text-xl mb-3">Built for Guilds, by Guild Members</h3><p class="text-g-400 text-sm leading-relaxed">Handles automated roles, match statistics, leaderboards, and server security — all in one package.</p></div>
-                    <div class="flex flex-wrap gap-2"><span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:user-check"></span> Auto Roles</span><span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:bar-chart-3"></span> Tracking</span><span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:trophy"></span> Leaderboards</span><span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:shield-check"></span> Anti-Raid</span></div>
-                    <div class="grid grid-cols-2 gap-4"><div class="bg-g-900 border border-g-800 rounded-xl p-4 text-center"><p class="text-g-100 text-2xl font-bold">15+</p><p class="text-g-600 text-xs mt-1">Commands</p></div><div class="bg-g-900 border border-g-800 rounded-xl p-4 text-center"><p class="text-g-100 text-2xl font-bold">99.9%</p><p class="text-g-600 text-xs mt-1">Uptime</p></div></div>
-                    <a href="https://discord.gg/6XANkGEsxg" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-medium transition-colors w-fit"><span class="iconify text-base" data-icon="ic:baseline-discord"></span> Try It on Our Server</a>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Mobile Overlay -->
+<div id="mobile-overlay"></div>
 
-    <section id="gallery" class="border-t border-g-800">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-24">
-            <div class="fade-in text-center mb-16">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-g-900 border border-g-800 mb-4">
-                    <span class="iconify text-g-500 text-sm" data-icon="lucide:image"></span>
-                    <span class="text-g-500 text-xs font-medium tracking-wide">MEDIA</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-semibold text-g-100 tracking-tight">Guild Gallery</h2>
+<!-- ===== NAVIGATION ===== -->
+<nav class="glass-nav fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between">
+        <!-- Logo Area -->
+        <a href="#home" class="flex items-center gap-2.5 shrink-0 group">
+            <!-- REPLACE WITH YOUR LOGO -->
+            <img src="https://via.placeholder.com/36x36/1a1a2a/ffffff?text=6T9" 
+                 alt="6T9 Guild Logo" 
+                 class="w-9 h-9 rounded-xl object-cover border border-white/10 shadow-lg transition-all duration-300 group-hover:border-white/30"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            
+            <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center transition-all duration-300 group-hover:bg-white/20 group-hover:border-white/20" style="display:none;">
+                <span class="text-white font-bold text-sm tracking-tight">6T9</span>
             </div>
             
-            <div class="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
-                
-                <div class="fade-in break-inside-avoid rounded-[5px] overflow-hidden bg-g-900 border border-g-800 card-hover">
-                    <div class="relative w-full pt-[56.25%]">
-                        <iframe class="absolute inset-0 w-full h-full rounded-[5px]" src="https://www.youtube.com/embed/pkOE-kyWQQ8?si=y4R8xd317M6xHb-r" title="Guild Video 1" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
+            <span class="text-white font-semibold text-lg tracking-tight">GUILD</span>
+        </a>
 
-                <div class="fade-in break-inside-avoid rounded-[5px] overflow-hidden bg-g-900 border border-g-800 card-hover">
-                    <img src="https://media.discordapp.net/attachments/1261642320432857200/1379364426360033301/image.png?ex=69d6af7a&is=69d55dfa&hm=cf6e153d78b31d20c50e16bf900d04f427f2fee9572af207fb0a169b3fcb2c53&=&format=webp&quality=lossless" alt="Guild Action" class="w-full h-auto object-cover rounded-[5px]">
-                </div>
+        <!-- Desktop Links -->
+        <div class="hidden md:flex items-center gap-8">
+            <a href="#home" class="nav-link text-white/60 hover:text-white text-sm font-medium transition-colors active">Home</a>
+            <a href="#bot" class="nav-link text-white/60 hover:text-white text-sm font-medium transition-colors">Bot</a>
+            <a href="#gallery" class="nav-link text-white/60 hover:text-white text-sm font-medium transition-colors">Gallery</a>
+            <a href="#allies" class="nav-link text-white/60 hover:text-white text-sm font-medium transition-colors">Allies</a>
+            <a href="#players" class="nav-link text-white/60 hover:text-white text-sm font-medium transition-colors">Players</a>
+            <a href="#connect" class="nav-link text-white/60 hover:text-white text-sm font-medium transition-colors">Connect</a>
+        </div>
 
-                <div class="fade-in break-inside-avoid rounded-[5px] overflow-hidden bg-g-900 border border-g-800 card-hover">
-                    <img src="https://cdn.discordapp.com/attachments/1338498484877262888/1440004483345027072/image.png?ex=69d7206e&is=69d5ceee&hm=57cfa1e093c99d3f51733cbd1d17c52f42c141b643d4b9f62fd4f7a66858cdf0&" alt="Tournament Win" class="w-full h-auto object-cover rounded-[5px]">
-                </div>
-
-                <div class="fade-in break-inside-avoid rounded-[5px] overflow-hidden bg-g-900 border border-g-800 card-hover">
-                    <div class="relative w-full pt-[56.25%]">
-                        <iframe class="absolute inset-0 w-full h-full rounded-[5px]" src="https://www.youtube.com/embed/15VYLWo7-uk?si=ZpZ8u-VW0DrpQKbL" title="Guild Video 2" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                </div>
-
-                <div class="fade-in break-inside-avoid rounded-[5px] overflow-hidden bg-g-900 border border-g-800 card-hover">
-                    <img src="https://cdn.discordapp.com/attachments/1338498484877262888/1413610746163630271/Screenshot_2025-09-06_at_1.14.16_AM.png?ex=69d6b019&is=69d55e99&hm=7d73b8545c8b72d19ffc58cdbcf91a20785ffd63042565bab6f020c6317eafde&   " alt="Team Meetup" class="w-full h-auto object-cover rounded-[5px]">
-                </div>
-
-                 <div class="fade-in break-inside-avoid rounded-[5px] overflow-hidden bg-g-900 border border-g-800 card-hover">
-                    <img src="https://cdn.discordapp.com/attachments/1338498484877262888/1488848148146159770/image.png?ex=69d6d723&is=69d585a3&hm=2d4647783ca8243d8d898daa1cc8cd04020e174427dc975f05dfabf4fd4f20d1&" alt="Guild Action" class="w-full h-auto object-cover rounded-[5px]">
-                </div>
-
+        <!-- Right Side Actions -->
+        <div class="flex items-center gap-3">
+            <div class="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                <span class="iconify text-white/50 text-sm" data-icon="lucide:users"></span>
+                <span class="text-white/70 text-xs font-medium">Members: <span class="text-white">47</span></span>
             </div>
-        </div>
-    </section>
-
-    <section id="allies" class="border-t border-g-800">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-24">
-            <div class="fade-in text-center mb-16"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-g-900 border border-g-800 mb-4"><span class="iconify text-g-500 text-sm" data-icon="lucide:link"></span><span class="text-g-500 text-xs font-medium tracking-wide">PARTNER GUILDS</span></div><h2 class="text-3xl md:text-4xl font-semibold text-g-100 tracking-tight">Our Allies</h2></div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl overflow-hidden">
-                    <div class="h-32 bg-gradient-to-br from-g-800 to-g-900 flex items-center justify-center relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-10 grid-bg"></div>
-                        <div class="relative w-14 h-14 rounded-2xl bg-g-700 border border-g-600 flex items-center justify-center">
-                            <span class="iconify text-g-300 text-2xl" data-icon="lucide:swords"></span></div></div>
-                            <div class="p-5"><h3 class="text-g-100 font-semibold text-base mb-1">THEBOIS</h3>
-                                <span class="rank-badge rank-officer mb-3 inline-block">exceptional skills</span>
-                                <p class="text-g-500 text-sm leading-relaxed">Elite PvP guild. Primary alliance for tournaments.</p>
-                            </div>
-                        </div>
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl overflow-hidden" style="transition-delay:.1s">
-                    <div class="h-32 bg-gradient-to-br from-g-800 to-g-900 flex items-center justify-center relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-10 grid-bg"></div>
-                        <div class="relative w-14 h-14 rounded-2xl bg-g-700 border border-g-600 flex items-center justify-center">
-                            <span class="iconify text-g-300 text-2xl" data-icon="lucide:castle"></span>
-                        </div>
-                    </div>
-                    <div class="p-5"><h3 class="text-g-100 font-semibold text-base mb-1">VIRUS</h3>
-                        <span class="rank-badge rank-veteran mb-3 inline-block">#VHNC</span>
-                        <p class="text-g-500 text-sm leading-relaxed">top 15 Guild in Pika Network! <br> Fastest-Growing Bedwars Guild – Join the Legacy! </p></div>
-                    </div>
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl overflow-hidden" style="transition-delay:.2s">
-                    <div class="h-32 bg-gradient-to-br from-g-800 to-g-900 flex items-center justify-center relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-10 grid-bg"></div>
-                        <div class="relative w-14 h-14 rounded-2xl bg-g-700 border border-g-600 flex items-center justify-center">
-                            <span class="iconify text-g-300 text-2xl" data-icon="lucide:cloud"></span>
-                        </div>
-                    </div>
-                    <div class="p-5"><h3 class="text-g-100 font-semibold text-base mb-1">ＳＡＫＵＲＡ</h3>
-                        <span class="rank-badge rank-member mb-3 inline-block">Supportive Guild</span>
-                        <p class="text-g-500 text-sm leading-relaxed">Currently a Private Guild</p>
-                    </div>
-                </div>
-                <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl overflow-hidden" style="transition-delay:.2s">
-                    <div class="h-32 bg-gradient-to-br from-g-800 to-g-900 flex items-center justify-center relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-10 grid-bg">
-                        </div>
-                        <div class="relative w-14 h-14 rounded-2xl bg-g-700 border border-g-600 flex items-center justify-center">
-                            <span class="iconify text-g-300 text-2xl" data-icon="lucide:cloud"></span>
-                        </div>
-                    </div>
-                    <div class="p-5"><h3 class="text-g-100 font-semibold text-base mb-1">VITALITY </h3>
-                        <span class="rank-badge rank-member mb-3 inline-block">[VITAL♡]</span>
-                        <p class="text-g-500 text-sm leading-relaxed">Skilled, competitive playerbase,  Friendly, community-driven vibes , Events, challenges & chill sessions,  Rewarding guild perks & support</p>
-                    </div>
-                </div>
-                 <div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl overflow-hidden" style="transition-delay:.1s">
-                    <div class="h-32 bg-gradient-to-br from-g-800 to-g-900 flex items-center justify-center relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-10 grid-bg"></div>
-                        <div class="relative w-14 h-14 rounded-2xl bg-g-700 border border-g-600 flex items-center justify-center">
-                            <span class="iconify text-g-300 text-2xl" data-icon="lucide:castle"></span>
-                        </div>
-                    </div>
-                    <div class="p-5"><h3 class="text-g-100 font-semibold text-base mb-1">NEXORA</h3>
-                        <span class="rank-badge rank-veteran mb-3 inline-block">trust, teamwork, together</span>
-                        <p class="text-g-500 text-sm leading-relaxed">Whether you're here to improve, compete, or just make friends —
-Nexora is more than a guild. It's a community built on trust, teamwork, and shared passion for the game.
- </p></div>
-                    </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="players" class="border-t border-g-800">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-24">
-            <div class="fade-in text-center mb-16"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-g-900 border border-g-800 mb-4"><span class="iconify text-g-500 text-sm" data-icon="lucide:gamepad-2"></span><span class="text-g-500 text-xs font-medium tracking-wide">GUILD ROSTER</span></div><h2 class="text-3xl md:text-4xl font-semibold text-g-100 tracking-tight">Our Players</h2></div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="players-grid"><p class="text-g-600 text-sm text-center py-8 col-span-full">Loading...</p></div>
-            <div id="no-players" class="hidden text-center py-16"><span class="iconify text-g-800 text-5xl mx-auto mb-4" data-icon="lucide:users"></span><p class="text-g-600 text-sm">No players listed yet.</p></div>
-        </div>
-    </section>
-
-    <!-- ✅ FIXED TICKET SECTION - Now handles ALL fields properly -->
-    <section id="connect" class="border-t border-g-800">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-24">
-            <div class="max-w-2xl mx-auto">
-                <div class="fade-in text-center mb-12"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-g-900 border border-g-800 mb-4"><span class="iconify text-g-500 text-sm" data-icon="lucide:ticket"></span><span class="text-g-500 text-xs font-medium tracking-wide">OPEN A TICKET</span></div><h2 class="text-3xl md:text-4xl font-semibold text-g-100 tracking-tight">Connect With Us</h2></div>
-                <form id="ticket-form" class="fade-in bg-g-900 border border-g-800 rounded-xl p-6 sm:p-8 space-y-5">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div><label class="block text-g-300 text-sm font-medium mb-2">Your IGN</label><input type="text" id="ticket-name" required placeholder="Enter username" class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                        <div><label class="block text-g-300 text-sm font-medium mb-2">Discord Handle</label><input type="text" id="ticket-discord" required placeholder="@username" class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                    </div>
-                    <div><label class="block text-g-300 text-sm font-medium mb-2">Reason</label><select id="ticket-reason" required class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors appearance-none cursor-pointer"><option value="" class="bg-g-950">Select a reason</option><option value="join" class="bg-g-950">I want to join 6T9</option><option value="ally" class="bg-g-950">Alliance inquiry</option><option value="event" class="bg-g-950">Event collaboration</option><option value="other" class="bg-g-950">Other</option></select></div>
-                    <div><label class="block text-g-300 text-sm font-medium mb-2">Message</label><textarea id="ticket-message" rows="3" required placeholder="Tell us about yourself..." class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
-                    
-                    <!-- ✅ FIXED: Additional fields for join requests - These NOW get saved to database -->
-                    <div id="join-fields" class="join-field space-y-5 pt-2">
-                        <div class="border-t border-g-800 pt-5"><p class="text-g-400 text-xs font-medium mb-4 tracking-wide flex items-center gap-2"><span class="iconify text-sm" data-icon="lucide:info"></span> ADDITIONAL INFO FOR JOIN REQUESTS</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div><label class="block text-g-300 text-sm font-medium mb-2">Bedwars Level</label><input type="text" id="ticket-bw" placeholder="e.g. 500+" class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                                <div><label class="block text-g-300 text-sm font-medium mb-2">Previous Guilds</label><input type="text" id="ticket-prev" placeholder="e.g. None, SkyLegion" class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                            </div>
-                            <div><label class="block text-g-300 text-sm font-medium mb-2">Reason for Joining 6T9</label><textarea id="ticket-joinreason" rows="2" placeholder="Why do you want to join us specifically?" class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors resize-none"></textarea></div>
-                            <div><label class="block text-g-300 text-sm font-medium mb-2">Alt Accounts</label><input type="text" id="ticket-alts" placeholder="List any alt accounts (IGNs)" class="w-full px-4 py-3 rounded-lg bg-g-950 border border-g-700 text-g-100 text-sm placeholder-g-600 focus:outline-none focus:border-g-500 focus:ring-1 focus:ring-g-500 transition-colors"></div>
-                        </div>
-                    </div>
-                    <button type="submit" id="ticket-submit-btn" class="w-full py-3 rounded-lg bg-g-100 text-g-900 font-semibold text-sm hover:bg-g-200 transition-colors flex items-center justify-center gap-2"><span class="iconify text-base" data-icon="lucide:send"></span> Submit Ticket</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <footer class="border-t border-g-800 bg-g-900 pb-8">
-        <div class="max-w-7xl mx-auto px-5 sm:px-6 py-12">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-g-800 border border-g-700 flex items-center justify-center"><span class="text-g-300 font-bold text-xs">6T9</span></div><span class="text-g-500 text-sm">© 2026 6T9 Guild</span></div>
-                <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
-                    <a href="#home" class="text-g-500 hover:text-g-300 text-sm transition-colors">Home</a>
-                    <a href="#bot" class="text-g-500 hover:text-g-300 text-sm transition-colors">Bot</a>
-                    <a href="#gallery" class="text-g-500 hover:text-g-300 text-sm transition-colors">Gallery</a>
-                    <a href="#allies" class="text-g-500 hover:text-g-300 text-sm transition-colors">Allies</a>
-                    <a href="#players" class="text-g-500 hover:text-g-300 text-sm transition-colors">Players</a>
-                    <a href="#connect" class="text-g-500 hover:text-g-300 text-sm transition-colors">Connect</a>
-                </div>
-                <a href="https://discord.gg/6XANkGEsxg" target="_blank" rel="noopener" class="text-g-500 hover:text-g-300 transition-colors"><span class="iconify text-xl" data-icon="ic:baseline-discord"></span></a>
-            </div>
-        </div>
-    </footer>
-
-    <div id="post-modal-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[110] flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300" onclick="closeModal(event)">
-        <div id="post-modal-content" class="bg-g-900 border border-g-800 rounded-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl transform scale-95 transition-transform duration-300 relative">
-            <button type="button" onclick="closeModal(event, true)" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-g-800 text-g-400 hover:text-g-100 hover:bg-g-700 transition-colors z-10"><span class="iconify text-xl" data-icon="lucide:x"></span></button>
-            <div id="modal-inner" class="p-6 sm:p-8"></div>
+            
+            <a href="https://discord.gg/6XANkGEsxg" target="_blank" rel="noopener" 
+               class="discord-glow flex items-center gap-2 px-4 py-2 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-semibold transition-all duration-300">
+                <span class="iconify text-base" data-icon="ic:baseline-discord"></span>
+                <span class="hidden sm:inline">Discord</span>
+            </a>
+            
+            <!-- Mobile Menu Toggle -->
+            <button id="menu-toggle" type="button" 
+                    class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300"
+                    aria-label="Toggle menu">
+                <span class="iconify text-xl menu-open-icon" data-icon="lucide:menu"></span>
+                <span class="iconify text-xl menu-close-icon hidden" data-icon="lucide:x"></span>
+            </button>
         </div>
     </div>
 
-    <script>
-    (function(){
-        var SUPABASE_URL='https://eiaxbuwihclqcmogozzh.supabase.co';
-        var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhidXdpaGNscWNtb2dvenpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0ODY2MDYsImV4cCI6MjA5MTA2MjYwNn0.KId9cODM_TbChE_tw3wF-NiIk66qOQq4GXhr6SeaelI';
-        var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-        window.postsData = [];
+    <!-- Mobile Menu -->
+    <div id="mobile-menu">
+        <div class="px-5 py-4 flex flex-col gap-1">
+            <a href="#home" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"><span class="iconify text-white/40 text-lg" data-icon="lucide:home"></span> Home</a>
+            <a href="#bot" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"><span class="iconify text-white/40 text-lg" data-icon="lucide:bot"></span> Bot</a>
+            <a href="#gallery" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"><span class="iconify text-white/40 text-lg" data-icon="lucide:image"></span> Gallery</a>
+            <a href="#allies" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"><span class="iconify text-white/40 text-lg" data-icon="lucide:link"></span> Allies</a>
+            <a href="#players" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"><span class="iconify text-white/40 text-lg" data-icon="lucide:gamepad-2"></span> Players</a>
+            <a href="#connect" class="mobile-link flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/5 text-sm font-medium transition-all"><span class="iconify text-white/40 text-lg" data-icon="lucide:ticket"></span> Connect</a>
+        </div>
+    </div>
+</nav>
 
-        var themeBtn = document.getElementById('theme-toggle');
-        var body = document.body;
+<!-- ============================================
+     ✨ PREMIUM HERO SECTION (Minimalist & Clean)
+     ============================================ -->
+<section id="home" class="hero-section">
+    
+    <!-- Vignette overlay for depth -->
+    <div class="hero-vignette"></div>
+    
+    <!-- Giant background text (very subtle) -->
+    <div class="hero-bg-text">
+        <h1>6T9</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="hero-content">
         
-        var savedTheme = localStorage.getItem('6t9-theme');
-        if(savedTheme === 'light') {
-            body.classList.add('light-theme');
-        } else {
-            body.classList.remove('light-theme');
-        }
+        <!-- Status Badge -->
+        <div class="hero-badge">
+            <div class="hero-badge-dot"></div>
+            <span class="text-white/80 text-xs font-semibold tracking-widest uppercase">Active & Recruiting</span>
+        </div>
         
-        function updateThemeIcon() {
-            var isLight = body.classList.contains('light-theme');
-            themeBtn.innerHTML = '<span class="iconify text-xl" data-icon="' + (isLight ? 'lucide:moon' : 'lucide:sun') + '"></span>';
+        <!-- Main Title -->
+        <h1 class="hero-title">
+            6<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">T</span>9
+        </h1>
+
+        <!-- Subtitle - Minimalist -->
+        <p class="hero-subtitle">
+            A competitive gaming guild built on teamwork, strategy, and loyalty.<br>
+            Dominating servers since 2021.
+        </p>
+        
+        <!-- CTA Buttons -->
+        <div class="hero-actions">
+            <a href="#connect" class="cta-primary">
+                <span>Join the Guild</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            
+            <a href="#players" class="cta-secondary">
+                <span>View Roster</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8m-4-4h8m-4 0v8"/></svg>
+            </a>
+        </div>
+    
+    </div>
+</section>
+
+<!-- ===== STATS SECTION ===== -->
+<section class="section-wrapper relative">
+    <div class="section-title-bg">Statistics</div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="fade-in glass-card p-7" style="transition-delay: 0s;">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-5">
+                    <span class="iconify text-white/60 text-xl" data-icon="lucide:shield"></span>
+                </div>
+                <h3 class="text-white font-semibold text-base mb-2">Creation</h3>
+                <p class="text-white/40 text-sm leading-relaxed mb-4">Founded in March 2021 by dedicated players with a shared vision.</p>
+                <p class="text-white/30 text-xs font-bold tracking-wider uppercase mt-auto">Est. 2021</p>
+            </div>
+            
+            <div class="fade-in glass-card p-7" style="transition-delay: 0.1s;">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-5">
+                    <span class="iconify text-white/60 text-xl" data-icon="lucide:swords"></span>
+                </div>
+                <h3 class="text-white font-semibold text-base mb-2">Performance</h3>
+                <p class="text-white/40 text-sm leading-relaxed mb-4">Top 5% across competitive events. 142 tournament wins and counting.</p>
+                <p class="text-white/30 text-xs font-bold tracking-wider uppercase mt-auto">142 Wins</p>
+            </div>
+            
+            <div class="fade-in glass-card p-7" style="transition-delay: 0.2s;">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-5">
+                    <span class="iconify text-white/60 text-xl" data-icon="lucide:trophy"></span>
+                </div>
+                <h3 class="text-white font-semibold text-base mb-2">Placement</h3>
+                <p class="text-white/40 text-sm leading-relaxed mb-4">Server rank #3 globally. Top-5 for 8 consecutive seasons.</p>
+                <p class="text-white/30 text-xs font-bold tracking-wider uppercase mt-auto">#3 Global</p>
+            </div>
+            
+            <div class="fade-in glass-card p-7" style="transition-delay: 0.3s;">
+                <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-5">
+                    <span class="iconify text-white/60 text-xl" data-icon="lucide:clock"></span>
+                </div>
+                <h3 class="text-white font-semibold text-base mb-2">History</h3>
+                <p class="text-white/40 text-sm leading-relaxed mb-4">From a 5-man squad to a 47-member powerhouse. Built on resilience.</p>
+                <p class="text-white/30 text-xs font-bold tracking-wider uppercase mt-auto">4 Years Strong</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ANNOUNCEMENTS SECTION ===== -->
+<section class="section-wrapper relative">
+    <div class="section-title-bg">Updates</div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 pb-12">
+        <div class="fade-in flex items-center justify-between mb-10">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Announcements</h2>
+                <p class="text-white/40 text-sm mt-2">Latest updates from guild administration</p>
+            </div>
+            <span class="iconify text-white/20 text-3xl" data-icon="lucide:message-square"></span>
+        </div>
+        
+        <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <p class="text-white/30 text-sm text-center py-16 col-span-full">Loading...</p>
+        </div>
+        <div id="no-posts" class="hidden text-center py-20">
+            <span class="iconify text-white/10 text-6xl mx-auto mb-4 block" data-icon="lucide:inbox"></span>
+            <p class="text-white/30 text-sm">No announcements yet.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== BOT SECTION ===== -->
+<section id="bot" class="section-wrapper relative border-t border-white/5">
+    <div class="section-title-bg">Bot</div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-24">
+        <div class="fade-in text-center mb-16">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6">
+                <span class="iconify text-white/50 text-sm" data-icon="lucide:bot"></span>
+                <span class="text-white/50 text-xs font-semibold tracking-widest uppercase">Discord Bot</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Meet the 6T9 Bot</h2>
+            <p class="text-white/40 text-sm max-w-lg mx-auto">Our custom Discord bot that powers guild operations with precision.</p>
+        </div>
+        
+        <div class="fade-in grid grid-cols-1 lg:grid-cols-5 gap-10 items-start">
+            <div class="lg:col-span-3">
+                <div class="yt-wrapper shadow-2xl shadow-black/20">
+                    <iframe src="https://www.youtube.com/embed/-vCsHUAXx1Y?si=WfClSTMqlYlYsEYR" title="6T9 Bot" allowfullscreen loading="lazy"></iframe>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <div>
+                    <h3 class="text-white font-bold text-2xl mb-3">Built for Guilds, by Guild Members</h3>
+                    <p class="text-white/50 text-sm leading-relaxed">Handles automated roles, match statistics, leaderboards, and server security — all in one package.</p>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:user-check"></span> Auto Roles</span>
+                    <span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:bar-chart-3"></span> Tracking</span>
+                    <span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:trophy"></span> Leaderboards</span>
+                    <span class="feature-pill"><span class="iconify text-sm" data-icon="lucide:shield-check"></span> Anti-Raid</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-card p-5 text-center">
+                        <p class="text-white text-3xl font-bold mb-1">15+</p>
+                        <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Commands</p>
+                    </div>
+                    <div class="glass-card p-5 text-center">
+                        <p class="text-white text-3xl font-bold mb-1">99.9%</p>
+                        <p class="text-white/40 text-xs font-medium uppercase tracking-wider">Uptime</p>
+                    </div>
+                </div>
+                
+                <a href="https://discord.gg/6XANkGEsxg" target="_blank" rel="noopener" 
+                   class="inline-flex items-center gap-2 discord-glow px-6 py-3.5 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-semibold transition-all w-fit">
+                    <span class="iconify text-base" data-icon="ic:baseline-discord"></span> Try It on Our Server
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== GALLERY SECTION ===== -->
+<section id="gallery" class="section-wrapper relative border-t border-white/5">
+    <div class="section-title-bg">Gallery</div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-24">
+        <div class="fade-in text-center mb-16">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6">
+                <span class="iconify text-white/50 text-sm" data-icon="lucide:image"></span>
+                <span class="text-white/50 text-xs font-semibold tracking-widest uppercase">Media</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Guild Gallery</h2>
+        </div>
+        
+        <div class="columns-1 sm:columns-2 md:columns-3 gap-5 space-y-5">
+            <div class="fade-in break-inside-avoid rounded-2xl overflow-hidden glass-card p-1.5">
+                <div class="relative w-full pt-[56.25%] rounded-xl overflow-hidden">
+                    <iframe class="absolute inset-0 w-full h-full rounded-xl" src="https://www.youtube.com/embed/pkOE-kyWQQ8?si=y4R8xd317M6xHb-r" title="Guild Video 1" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="fade-in break-inside-avoid rounded-2xl overflow-hidden glass-card p-1.5">
+                <img src="https://media.discordapp.net/attachments/1261642320432857200/1379364426360033301/image.png?ex=69d6af7a&is=69d55dfa&hm=cf6e153d78b31d20c50e16bf900d04f427f2fee9572af207fb0a169b3fcb2c53&=&format=webp&quality=lossless" alt="Guild Action" class="w-full h-auto object-cover rounded-xl">
+            </div>
+
+            <div class="fade-in break-inside-avoid rounded-2xl overflow-hidden glass-card p-1.5">
+                <img src="https://cdn.discordapp.com/attachments/1338498484877262888/1440004483345027072/image.png?ex=69d7206e&is=69d5ceee&hm=57cfa1e093c99d3f51733cbd1d17c52f42c141b643d4b9f62fd4f7a66858cdf0&" alt="Tournament Win" class="w-full h-auto object-cover rounded-xl">
+            </div>
+
+            <div class="fade-in break-inside-avoid rounded-2xl overflow-hidden glass-card p-1.5">
+                <div class="relative w-full pt-[56.25%] rounded-xl overflow-hidden">
+                    <iframe class="absolute inset-0 w-full h-full rounded-xl" src="https://www.youtube.com/embed/15VYLWo7-uk?si=ZpZ8u-VW0DrpQKbL" title="Guild Video 2" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <div class="fade-in break-inside-avoid rounded-2xl overflow-hidden glass-card p-1.5">
+                <img src="https://cdn.discordapp.com/attachments/1338498484877262888/1413610746163630271/Screenshot_2025-09-06_at_1.14.16_AM.png?ex=69d6b019&is=69d55e99&hm=7d73b8545c8b72d19ffc58cdbcf91a20785ffd63042565bab6f020c6317eafde&   " alt="Team Meetup" class="w-full h-auto object-cover rounded-xl">
+            </div>
+
+             <div class="fade-in break-inside-avoid rounded-2xl overflow-hidden glass-card p-1.5">
+                <img src="https://cdn.discordapp.com/attachments/1338498484877262888/1488848148146159770/image.png?ex=69d6d723&is=69d585a3&hm=2d4647783ca8243d8d898daa1cc8cd04020e174427dc975f05dfabf4fd4f20d1&" alt="Guild Action" class="w-full h-auto object-cover rounded-xl">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ALLIES SECTION ===== -->
+<section id="allies" class="section-wrapper relative border-t border-white/5">
+    <div class="section-title-bg">Allies</div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-24">
+        <div class="fade-in text-center mb-16">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6">
+                <span class="iconify text-white/50 text-sm" data-icon="lucide:link"></span>
+                <span class="text-white/50 text-xs font-semibold tracking-widest uppercase">Partners</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Our Allies</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- THEBOIS -->
+            <div class="fade-in glass-card overflow-hidden" style="transition-delay: 0s;">
+                <div class="h-36 bg-gradient-to-br from-white/5 to-transparent flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    <img src="https://via.placeholder.com/64x64/1a1a2a/ffffff?text=TB" alt="THEBOIS Logo" class="relative w-16 h-16 rounded-2xl object-cover border border-white/20 shadow-lg bg-white/5 p-1" onerror="this.src='https://ui-avatars.com/api/?name=THEBOIS&background=1a1a2a&color=fff&size=64&bold=true'">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-white font-bold text-lg mb-2">THEBOIS</h3>
+                    <span class="rank-badge rank-officer mb-3 inline-block">Exceptional Skills</span>
+                    <p class="text-white/40 text-sm leading-relaxed">Elite PvP guild. Primary alliance for tournaments.</p>
+                </div>
+            </div>
+            
+            <!-- VIRUS -->
+            <div class="fade-in glass-card overflow-hidden" style="transition-delay: 0.1s;">
+                <div class="h-36 bg-gradient-to-br from-white/5 to-transparent flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    <img src="https://via.placeholder.com/64x64/1a1a2a/ffffff?text=VR" alt="VIRUS Logo" class="relative w-16 h-16 rounded-2xl object-cover border border-white/20 shadow-lg bg-white/5 p-1" onerror="this.src='https://ui-avatars.com/api/?name=VIRUS&background=1a1a2a&color=fff&size=64&bold=true'">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-white font-bold text-lg mb-2">VIRUS</h3>
+                    <span class="rank-badge rank-veteran mb-3 inline-block">#VHNC</span>
+                    <p class="text-white/40 text-sm leading-relaxed">Top 15 Guild in Pika Network! Fastest-Growing Bedwars Guild – Join the Legacy!</p>
+                </div>
+            </div>
+            
+            <!-- SAKURA -->
+            <div class="fade-in glass-card overflow-hidden" style="transition-delay: 0.2s;">
+                <div class="h-36 bg-gradient-to-br from-white/5 to-transparent flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    <img src="https://via.placeholder.com/64x64/1a1a2a/ffffff?text=SK" alt="SAKURA Logo" class="relative w-16 h-16 rounded-2xl object-cover border border-white/20 shadow-lg bg-white/5 p-1" onerror="this.src='https://ui-avatars.com/api/?name=SAKURA&background=1a1a2a&color=fff&size=64&bold=true'">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-white font-bold text-lg mb-2">ＳＡＫＵＲＡ</h3>
+                    <span class="rank-badge rank-member mb-3 inline-block">Supportive Guild</span>
+                    <p class="text-white/40 text-sm leading-relaxed">Currently a Private Guild</p>
+                </div>
+            </div>
+            
+            <!-- VITALITY -->
+            <div class="fade-in glass-card overflow-hidden" style="transition-delay: 0.2s;">
+                <div class="h-36 bg-gradient-to-br from-white/5 to-transparent flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    <img src="https://via.placeholder.com/64x64/1a1a2a/ffffff?text=VT" alt="VITALITY Logo" class="relative w-16 h-16 rounded-2xl object-cover border border-white/20 shadow-lg bg-white/5 p-1" onerror="this.src='https://ui-avatars.com/api/?name=VITALITY&background=1a1a2a&color=fff&size=64&bold=true'">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-white font-bold text-lg mb-2">VITALITY</h3>
+                    <span class="rank-badge rank-member mb-3 inline-block">[VITAL♡]</span>
+                    <p class="text-white/40 text-sm leading-relaxed">Skilled, competitive playerbase. Friendly community-driven vibes. Events & challenges.</p>
+                </div>
+            </div>
+            
+            <!-- NEXORA -->
+            <div class="fade-in glass-card overflow-hidden" style="transition-delay: 0.1s;">
+                <div class="h-36 bg-gradient-to-br from-white/5 to-transparent flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    <img src="https://via.placeholder.com/64x64/1a1a2a/ffffff?text=NX" alt="NEXORA Logo" class="relative w-16 h-16 rounded-2xl object-cover border border-white/20 shadow-lg bg-white/5 p-1" onerror="this.src='https://ui-avatars.com/api/?name=NEXORA&background=1a1a2a&color=fff&size=64&bold=true'">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-white font-bold text-lg mb-2">NEXORA</h3>
+                    <span class="rank-badge rank-veteran mb-3 inline-block">Trust, Teamwork, Together</span>
+                    <p class="text-white/40 text-sm leading-relaxed">Whether you're here to improve, compete, or just make friends — Nexora is more than a guild. It's a community built on trust, teamwork, and shared passion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PLAYERS SECTION ===== -->
+<section id="players" class="section-wrapper relative border-t border-white/5">
+    <div class="section-title-bg">Roster</div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 py-24">
+        <div class="fade-in text-center mb-16">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6">
+                <span class="iconify text-white/50 text-sm" data-icon="lucide:gamepad-2"></span>
+                <span class="text-white/50 text-xs font-semibold tracking-widest uppercase">Guild Members</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Our Players</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="players-grid">
+            <p class="text-white/30 text-sm text-center py-16 col-span-full">Loading...</p>
+        </div>
+        <div id="no-players" class="hidden text-center py-20">
+            <span class="iconify text-white/10 text-6xl mx-auto mb-4 block" data-icon="lucide:users"></span>
+            <p class="text-white/30 text-sm">No players listed yet.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CONNECT/TICKET FORM SECTION ===== -->
+<section id="connect" class="section-wrapper relative border-t border-white/5">
+    <div class="section-title-bg">Contact</div>
+    
+    <div class="relative z-10 max-w-3xl mx-auto px-5 sm:px-6 py-24">
+        <div class="fade-in text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6">
+                <span class="iconify text-white/50 text-sm" data-icon="lucide:ticket"></span>
+                <span class="text-white/50 text-xs font-semibold tracking-widest uppercase">Open Ticket</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">Connect With Us</h2>
+        </div>
+        
+        <form id="ticket-form" class="fade-in glass-card p-8 sm:p-10 space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label class="block text-white/70 text-sm font-medium mb-2">Your IGN</label>
+                    <input type="text" id="ticket-name" required placeholder="Enter username" class="glass-input w-full px-4 py-3.5 text-sm">
+                </div>
+                <div>
+                    <label class="block text-white/70 text-sm font-medium mb-2">Discord Handle</label>
+                    <input type="text" id="ticket-discord" required placeholder="@username" class="glass-input w-full px-4 py-3.5 text-sm">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-white/70 text-sm font-medium mb-2">Reason</label>
+                <select id="ticket-reason" required class="glass-input w-full px-4 py-3.5 text-sm appearance-none cursor-pointer">
+                    <option value="" class="bg-gray-900">Select a reason</option>
+                    <option value="join" class="bg-gray-900">🎮 I want to join 6T9</option>
+                    <option value="ally" class="bg-gray-900">🤝 Alliance Inquiry</option>
+                    <option value="event" class="bg-gray-900">🎉 Event Collaboration</option>
+                    <option value="other" class="bg-gray-900">❓ Other</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-white/70 text-sm font-medium mb-2">Message</label>
+                <textarea id="ticket-message" rows="4" required placeholder="Tell us about yourself..." class="glass-input w-full px-4 py-3.5 text-sm resize-none"></textarea>
+            </div>
+            
+            <div id="join-fields" class="join-field space-y-5 pt-2">
+                <div class="border-t border-white/10 pt-6">
+                    <p class="text-white/50 text-xs font-bold mb-5 tracking-wider uppercase flex items-center gap-2">
+                        <span class="iconify text-sm" data-icon="lucide:info"></span> Additional Info For Join Requests
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-white/70 text-sm font-medium mb-2">Bedwars Level</label>
+                            <input type="text" id="ticket-bw" placeholder="e.g. 500+" class="glass-input w-full px-4 py-3.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-white/70 text-sm font-medium mb-2">Previous Guilds</label>
+                            <input type="text" id="ticket-prev" placeholder="e.g. None, SkyLegion" class="glass-input w-full px-4 py-3.5 text-sm">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white/70 text-sm font-medium mb-2">Reason for Joining 6T9</label>
+                        <textarea id="ticket-joinreason" rows="2" placeholder="Why do you want to join us specifically?" class="glass-input w-full px-4 py-3.5 text-sm resize-none"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-white/70 text-sm font-medium mb-2">Alt Accounts</label>
+                        <input type="text" id="ticket-alts" placeholder="List any alt accounts (IGNs)" class="glass-input w-full px-4 py-3.5 text-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" id="ticket-submit-btn" class="glass-btn-primary w-full py-4 text-sm flex items-center justify-center gap-2">
+                <span class="iconify text-base" data-icon="lucide:send"></span> Submit Ticket
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="border-t border-white/5 bg-black/50 backdrop-blur-xl pb-8 relative z-10">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 py-12">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-3">
+                <img src="https://via.placeholder.com/32x32/1a1a2a/ffffff?text=6T9" alt="6T9 Logo" class="w-8 h-8 rounded-lg object-cover border border-white/10" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center" style="display:none;">
+                    <span class="text-white font-bold text-xs">6T9</span>
+                </div>
+                <span class="text-white/40 text-sm">© 2026 6T9 Guild</span>
+            </div>
+            
+            <div class="flex items-center gap-6 flex-wrap justify-center">
+                <a href="#home" class="text-white/40 hover:text-white/80 text-sm transition-colors">Home</a>
+                <a href="#bot" class="text-white/40 hover:text-white/80 text-sm transition-colors">Bot</a>
+                <a href="#{gallery}" class="text-white/40 hover:text-white/80 text-sm transition-colors">Gallery</a>
+                <a href="#allies" class="text-white/40 hover:text-white/80 text-sm transition-colors">Allies</a>
+                <a href="#players" class="text-white/40 hover:text-white/80 text-sm transition-colors">Players</a>
+                <a href="#connect" class="text-white/40 hover:text-white/80 text-sm transition-colors">Connect</a>
+            </div>
+            
+            <a href="https://discord.gg/6XANkGEsxg" target="_blank" rel="noopener" class="text-white/40 hover:text-white/80 transition-colors">
+                <span class="iconify text-xl" data-icon="ic:baseline-discord"></span>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<!-- Post Modal -->
+<div id="post-modal-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[110] flex items-center justify-center p-4 pointer-events-none opacity-0 transition-opacity duration-300" onclick="closeModal(event)">
+    <div id="post-modal-content" class="glass-card w-full max-w-2xl max-h-[85vh] overflow-y-auto shadow-2xl relative">
+        <button type="button" onclick="closeModal(event, true)" class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 text-white/60 hover:text-white hover:bg-white/20 transition-all z-10">
+            <span class="iconify text-xl" data-icon="lucide:x"></span>
+        </button>
+        <div id="modal-inner" class="p-8 sm:p-10"></div>
+    </div>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+(function(){
+    // Supabase Config
+    const SUPABASE_URL = 'https://eiaxbuwihclqcmogozzh.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhidXdpaGNscWNtb2dvenpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4ODY2MDYsImV4cCI6MjA5MTA2MjYwNn0.KId9cODM_TbChE_tw3wF-NiIk66qOQq4GXhr6SeaelI';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    window.postsData = [];
+
+    // Scroll Progress Logic
+    const progressText = document.querySelector('.scroll-progress-text');
+    const progressGlow = document.querySelector('.scroll-progress-glow');
+    
+    function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = Math.min(scrollTop / docHeight, 1);
+        
+        document.documentElement.style.setProperty('--scroll-percent', `${scrollPercent * 100}%`);
+        document.documentElement.style.setProperty('--scroll-opacity', scrollPercent.toString());
+        
+        if(progressGlow) {
+            progressGlow.style.opacity = Math.min(scrollPercent * 1.5, 1).toString();
         }
-        updateThemeIcon();
+    }
+    
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+        if(!ticking) {
+            requestAnimationFrame(function() {
+                updateScrollProgress();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+    
+    updateScrollProgress();
 
-        themeBtn.addEventListener('click', function() {
-            body.classList.toggle('light-theme');
-            localStorage.setItem('6t9-theme', body.classList.contains('light-theme') ? 'light' : 'dark');
-            updateThemeIcon();
+    // Mobile Menu
+    const mt = document.getElementById('menu-toggle');
+    const mm = document.getElementById('mobile-menu');
+    const mo = document.getElementById('mobile-overlay');
+    const moi = mt.querySelector('.menu-open-icon');
+    const mci = mt.querySelector('.menu-close-icon');
+    let menuOpen = false;
+
+    function openMenu() { menuOpen = true; mm.classList.add('open'); mo.classList.add('open'); document.body.classList.add('menu-open'); moi.classList.add('hidden'); mci.classList.remove('hidden'); }
+    function closeMenu() { menuOpen = false; mm.classList.remove('open'); mo.classList.remove('open'); document.body.classList.remove('menu-open'); moi.classList.remove('hidden'); mci.classList.add('hidden'); }
+
+    mt.addEventListener('click', function(e) { e.stopPropagation(); menuOpen ? closeMenu() : openMenu(); });
+    mo.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-link').forEach(function(l) { l.addEventListener('click', closeMenu); });
+    document.addEventListener('keydown', function(e) { if(e.key === 'Escape') { if(menuOpen) closeMenu(); window.closeModal(e, true); } });
+    window.addEventListener('resize', function() { if(window.innerWidth >= 768 && menuOpen) closeMenu(); });
+
+    // Active Nav Link
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    window.addEventListener('scroll', function() {
+        let current = '';
+        sections.forEach(function(section) {
+            if(window.scrollY >= section.offsetTop - 100) current = section.getAttribute('id');
         });
-
-        var mt=document.getElementById('menu-toggle'),mm=document.getElementById('mobile-menu'),mo=document.getElementById('mobile-overlay'),moi=mt.querySelector('.menu-open-icon'),mci=mt.querySelector('.menu-close-icon'),mO=false;
-        function oM(){mO=true;mm.classList.add('open');mo.classList.add('open');document.body.classList.add('menu-open');moi.classList.add('hidden');mci.classList.remove('hidden')}
-        function cM(){mO=false;mm.classList.remove('open');mo.classList.remove('open');document.body.classList.remove('menu-open');moi.classList.remove('hidden');mci.classList.add('hidden')}
-        mt.addEventListener('click',function(e){e.stopPropagation();mO?cM():oM()});mo.addEventListener('click',cM);
-        document.querySelectorAll('.mobile-link').forEach(function(l){l.addEventListener('click',cM)});
-        document.addEventListener('keydown',function(e){if(e.key==='Escape'){if(mO)cM(); window.closeModal(e, true);}});
-        window.addEventListener('resize',function(){if(window.innerWidth>=768&&mO)cM()});
-
-        var secs=document.querySelectorAll('section[id]'),nls=document.querySelectorAll('.nav-link');
-        window.addEventListener('scroll',function(){var c='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-100)c=s.getAttribute('id')});nls.forEach(function(l){l.classList.remove('active');if(l.getAttribute('href')==='#'+c)l.classList.add('active')})});
-
-        var fo=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');fo.unobserve(x.target)}})},{threshold:0.1});
-        document.querySelectorAll('.fade-in').forEach(function(el){fo.observe(el)});
-
-        function toast(m,t){t=t||'success';var c=document.getElementById('toast-container'),d=document.createElement('div');var b=t==='success'?'border-g-500':t==='error'?'border-red-400':'border-g-600';var i=t==='success'?'lucide:check-circle':t==='error'?'lucide:alert-circle':'lucide:info';d.className='toast flex items-center gap-3 px-5 py-3 rounded-lg bg-g-950 border '+b+' shadow-lg max-w-sm';d.innerHTML='<span class="iconify text-g-300 text-lg shrink-0" data-icon="'+i+'"></span><span class="text-g-100 text-sm font-medium">'+m+'</span>';c.appendChild(d);setTimeout(function(){d.remove()},4000)}
-
-        function fmtD(d){return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
-        function rCls(r){return{'Leader':'rank-leader','Co-Leader':'rank-coleader','Officer':'rank-officer','Veteran':'rank-veteran','Member':'rank-member'}[r]||'rank-member'}
-
-        // Show/hide join fields based on reason selection
-        document.getElementById('ticket-reason').addEventListener('change',function(){
-            document.getElementById('join-fields').classList.toggle('show',this.value==='join')
+        navLinks.forEach(function(link) {
+            link.classList.remove('active');
+            if(link.getAttribute('href') === '#' + current) link.classList.add('active');
         });
+    });
 
-        // ✅✅✅ FIXED TICKET SUBMISSION LOGIC - Now saves ALL fields including optional ones ✅✅✅
-        document.getElementById('ticket-form').addEventListener('submit', async function(e){
-            e.preventDefault();
-            
-            var btn = document.getElementById('ticket-submit-btn');
-            var originalBtnHTML = btn.innerHTML;
-            
-            // ✅ Build payload with ALL fields (both required AND optional)
-            // This matches the NEW SQL schema exactly!
-            var payload = {
-                // Required fields
-                player_name: document.getElementById('ticket-name').value.trim(),
-                discord_handle: document.getElementById('ticket-discord').value.trim(),
-                reason: document.getElementById('ticket-reason').value,
-                message: document.getElementById('ticket-message').value.trim(),
-                
-                // ✅ Optional join-specific fields (now included!)
-                bedwars_level: document.getElementById('ticket-bw').value.trim() || null,
-                previous_guilds: document.getElementById('ticket-prev').value.trim() || null,
-                join_reason: document.getElementById('ticket-joinreason').value.trim() || null,
-                alts: document.getElementById('ticket-alts').value.trim() || null,
-                
-                // Metadata
-                status: 'pending'
-            };
-
-            try {
-                // Disable button & show loading state
-                btn.disabled = true;
-                btn.innerHTML = '<span class="iconify animate-spin" data-icon="lucide:loader-2"></span> Sending...';
-                
-                console.log('📤 Submitting ticket:', payload); // Debug log
-                
-                // ✅ Insert into Supabase 'tickets' table
-                var { data, error } = await sb.from('tickets').insert([payload]);
-                
-                if(error) throw error;
-
-                console.log('✅ Ticket submitted successfully:', data); // Success log
-                
-                toast('Ticket submitted successfully! We will contact you soon.');
-                
-                // Reset form completely
-                this.reset();
-                document.getElementById('join-fields').classList.remove('show');
-                
-            } catch(err) {
-                console.error('❌ Ticket submission failed:', err);
-                toast('Failed to send ticket. Please try again.', 'error');
-            } finally {
-                // Restore button state
-                btn.disabled = false;
-                btn.innerHTML = originalBtnHTML;
+    // Fade In Observer
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
             }
         });
+    }, { threshold: 0.1 });
 
-        window.openModal = function(index) {
-            var post = window.postsData[index];
-            if(!post) return;
-            var inner = document.getElementById('modal-inner');
-            inner.innerHTML = 
-                '<div class="flex items-center gap-3 mb-6">'+
-                '<div class="w-12 h-12 rounded-full bg-g-800 border border-g-700 flex items-center justify-center shrink-0"><span class="text-g-300 text-lg font-bold">'+post.author.charAt(0).toUpperCase()+'</span></div>'+
-                '<div><div class="flex items-center gap-2"><span class="text-g-100 text-base font-semibold">'+post.author+'</span>'+
-                (post.pinned?'<span class="rank-badge rank-leader">PINNED</span>':'')+
-                '</div><span class="text-g-500 text-sm">'+fmtD(post.created_at)+'</span></div></div>'+
-                '<h2 class="text-2xl font-bold text-g-100 mb-4">'+post.title+'</h2>'+
-                '<div class="text-g-400 leading-relaxed whitespace-pre-wrap">'+post.content+'</div>';
-            
-            document.getElementById('post-modal-overlay').classList.add('show');
-            document.body.classList.add('overflow-hidden');
+    document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
+
+    // Toast
+    function toast(message, type) {
+        type = type || 'success';
+        const container = document.getElementById('toast-container');
+        const div = document.createElement('div');
+        const borderColor = type === 'success' ? 'border-emerald-400/30' : type === 'error' ? 'border-red-400/30' : 'border-blue-400/30';
+        const icon = type === 'success' ? 'lucide:check-circle' : type === 'error' ? 'lucide:alert-circle' : 'lucide:info';
+        const iconColor = type === 'success' ? 'text-emerald-400' : type === 'error' ? 'text-red-400' : 'text-blue-400';
+
+        div.className = 'toast glass border ' + borderColor + ' max-w-sm';
+        div.innerHTML = '<span class="iconify text-lg shrink-0 ' + iconColor + '" data-icon="' + icon + '"></span><span class="text-white text-sm font-medium">' + message + '</span>';
+        container.appendChild(div);
+        setTimeout(function() { div.remove(); }, 4000);
+    }
+
+    // Utilities
+    function fmtDate(d) { return new Date(d).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}); }
+    function rankClass(r) { return {'Leader':'rank-leader','Co-Leader':'rank-coleader','Officer':'rank-officer','Veteran':'rank-veteran','Member':'rank-member'}[r] || 'rank-member'; }
+    function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+
+    // Ticket Form
+    document.getElementById('ticket-reason').addEventListener('change', function() {
+        document.getElementById('join-fields').classList.toggle('show', this.value === 'join');
+    });
+
+    // Ticket Submission
+    document.getElementById('ticket-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('ticket-submit-btn');
+        const originalBtnHTML = btn.innerHTML;
+
+        const payload = {
+            player_name: document.getElementById('ticket-name').value.trim(),
+            discord_handle: document.getElementById('ticket-discord').value.trim(),
+            reason: document.getElementById('ticket-reason').value,
+            message: document.getElementById('ticket-message').value.trim(),
+            bedwars_level: document.getElementById('ticket-bw').value.trim() || null,
+            previous_guilds: document.getElementById('ticket-prev').value.trim() || null,
+            join_reason: document.getElementById('ticket-joinreason').value.trim() || null,
+            alts: document.getElementById('ticket-alts').value.trim() || null,
+            status: 'pending'
         };
 
-        window.closeModal = function(e, force) {
-            if(force || e.target.id === 'post-modal-overlay') {
-                document.getElementById('post-modal-overlay').classList.remove('show');
-                document.body.classList.remove('overflow-hidden');
-            }
-        };
+        try {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="iconify spinner" data-icon="lucide:loader-2"></span> Sending...';
 
-        async function loadPosts(){
-            var box=document.getElementById('posts-container'),emp=document.getElementById('no-posts');
-            try{
-                var r=await sb.from('posts').select('*').order('pinned',{ascending:false}).order('created_at',{ascending:false});
-                if(r.error)throw new Error(r.error.message);
-                var p=r.data||[];
-                
-                if(p.length===0){box.innerHTML='';emp.classList.remove('hidden');return}
-                emp.classList.add('hidden');
-                window.postsData = p;
-                
-                box.innerHTML=p.map(function(o, index){
-                    return '<div class="bg-g-900 border border-g-800 rounded-xl overflow-hidden card-hover group cursor-pointer flex flex-col '+(o.pinned?'border-l-[3px] border-l-g-400':'')+'" onclick="openModal('+index+')">'+
-                    '<div class="p-5 sm:p-6 flex flex-col h-full">'+
-                    '<div class="flex items-center gap-3 mb-4">'+
-                    '<div class="w-9 h-9 rounded-full bg-g-800 border border-g-700 flex items-center justify-center shrink-0"><span class="text-g-300 text-xs font-bold">'+o.author.charAt(0).toUpperCase()+'</span></div>'+
-                    '<div class="min-w-0"><div class="flex items-center gap-2 flex-wrap"><span class="text-g-200 text-sm font-medium truncate">'+o.author+'</span>'+
-                    (o.pinned?'<span class="rank-badge rank-leader">PINNED</span>':'')+
-                    '</div><span class="text-g-600 text-xs">'+fmtD(o.created_at)+'</span></div></div>'+
-                    '<h3 class="text-g-100 font-semibold text-base sm:text-lg mb-2 leading-snug">'+o.title+'</h3>'+
-                    '<p class="text-g-400 text-sm leading-relaxed line-clamp-2 mb-4">'+o.content+'</p>'+
-                    '<div class="mt-auto pt-2 border-t border-g-800 flex justify-end">'+
-                    '<span class="text-xs font-medium text-g-500 opacity-0 md:group-hover:opacity-100 transition-opacity hidden md:block">Click for more Information</span>'+
-                    '<span class="text-xs font-medium text-g-500 md:hidden block">more</span>'+
-                    '</div>'+
-                    '</div></div>';
-                }).join('');
-            }catch(e){console.error(e);box.innerHTML='';emp.classList.remove('hidden')}
+            const { error } = await sb.from('tickets').insert([payload]);
+            if(error) throw error;
+
+            toast('Ticket submitted successfully! We will contact you soon.');
+            this.reset();
+            document.getElementById('join-fields').classList.remove('show');
+        } catch(err) {
+            console.error('Ticket Error:', err);
+            toast('Failed to send ticket. Please try again.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHTML;
         }
+    });
 
-        async function loadPlayers(){
-            var grid=document.getElementById('players-grid'),emp=document.getElementById('no-players');
-            try{
-                var r=await sb.from('players').select('*').order('created_at',{ascending:true});
-                if(r.error)throw new Error(r.error.message);
-                var ps=r.data||[];
-                if(ps.length===0){grid.innerHTML='';emp.classList.remove('hidden');return}
-                emp.classList.add('hidden');
-                
-                grid.innerHTML=ps.map(function(p,i){
-                    var defaultAv='https://ui-avatars.com/api/?name='+encodeURIComponent(p.name)+'&background=d2d3db&color=484b6a&size=200&bold=true';
-                    var defaultSkin='https://ui-avatars.com/api/?name='+encodeURIComponent(p.name)+'&background=e4e5f1&color=9394a5&size=200&bold=true&format=svg';
-                    var av=p.avatar_url||defaultAv;
-                    var sk=p.skin_url||defaultSkin;
-                    var chips='';
-                    
-                    if(p.bedwars_level)chips+='<span class="info-chip"><span class="iconify text-[10px]" data-icon="lucide:swords"></span>BW '+p.bedwars_level+'</span>';
-                    if(p.previous_guilds)chips+='<span class="info-chip"><span class="iconify text-[10px]" data-icon="lucide:castle"></span>'+p.previous_guilds+'</span>';
-                    if(p.alts)chips+='<span class="info-chip"><span class="iconify text-[10px]" data-icon="lucide:users"></span>Alt: '+p.alts+'</span>';
-                    
-                    return '<div class="fade-in card-hover bg-g-900 border border-g-800 rounded-xl overflow-hidden mt-8 flex flex-col h-full" style="transition-delay:'+(i*0.06)+'s">'+
-                        '<div class="flex justify-center pt-6 pb-3 shrink-0">'+
-                            '<img src="'+sk+'" alt="" class="skin-img w-16 h-32 rounded object-cover border border-g-700 shadow-sm" loading="lazy" onerror="this.src=\''+defaultSkin+'\'">'+
-                        '</div>'+
-                        '<div class="px-5 pb-6 text-center flex-1 flex flex-col">'+
-                            '<h3 class="text-g-100 font-bold text-lg mb-1.5 truncate">'+p.name+'</h3>'+
-                            '<div class="mb-3"><span class="rank-badge '+rCls(p.rank)+'">'+(p.rank||'Member')+'</span></div>'+
-                            '<p class="text-g-500 text-sm leading-relaxed mb-3 line-clamp-2">'+(p.description||'')+'</p>'+
-                            (chips?'<div class="flex flex-wrap justify-center gap-1.5 mt-auto">'+chips+'</div>':'')+
-                        '</div>'+
-                        '<div class="relative pt-8 pb-4 px-4 border-t border-g-800 bg-g-950/40 text-center flex flex-col items-center mt-auto shrink-0">'+
-                            '<img src="'+av+'" alt="'+p.name+'" class="w-14 h-14 rounded-full border-[3px] border-g-900 bg-g-800 absolute -top-7 object-cover shadow-md" loading="lazy" onerror="this.src=\''+defaultAv+'\'">'+
-                            '<div class="flex items-center gap-1.5">'+
-                                '<span class="iconify text-[#5865F2] text-[16px]" data-icon="ic:baseline-discord"></span>'+
-                                '<span class="text-g-400 font-medium text-sm truncate">'+(p.discord||'@'+p.name.toLowerCase())+'</span>'+
-                            '</div>'+
-                        '</div>'+
-                    '</div>';
-                }).join('');
-                
-                grid.querySelectorAll('.fade-in:not(.visible)').forEach(function(el){fo.observe(el)});
-            }catch(e){console.error(e);grid.innerHTML='';emp.classList.remove('hidden')}
+    // Modal Functions
+    window.openModal = function(index) {
+        const post = window.postsData[index];
+        if(!post) return;
+
+        const inner = document.getElementById('modal-inner');
+        inner.innerHTML = `
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                    <span class="text-white text-xl font-bold">${post.author.charAt(0).toUpperCase()}</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-white text-lg font-semibold">${escapeHtml(post.author)}</span>
+                        ${post.pinned ? '<span class="rank-badge rank-leader">PINNED</span>' : ''}
+                    </div>
+                    <span class="text-white/40 text-sm">${fmtDate(post.created_at)}</span>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-4">${escapeHtml(post.title)}</h2>
+            <div class="text-white/60 leading-relaxed whitespace-pre-wrap">${escapeHtml(post.content)}</div>
+        `;
+
+        document.getElementById('post-modal-overlay').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeModal = function(e, force) {
+        if(force || e.target.id === 'post-modal-overlay') {
+            document.getElementById('post-modal-overlay').classList.remove('show');
+            document.body.style.overflow = '';
         }
+    };
 
-        // Initialize
-        loadPosts();
-        loadPlayers();
-    })();
-    </script>
+    // Load Posts
+    async function loadPosts() {
+        const box = document.getElementById('posts-container');
+        const emp = document.getElementById('no-posts');
+
+        try {
+            const r = await sb.from('posts')
+                .select('*')
+                .order('pinned', { ascending: false })
+                .order('created_at', { ascending: false });
+
+            if(r.error) throw new Error(r.error.message);
+
+            const posts = r.data || [];
+
+            if(posts.length === 0) { box.innerHTML = ''; emp.classList.remove('hidden'); return; }
+            emp.classList.add('hidden');
+            window.postsData = posts;
+
+            box.innerHTML = posts.map(function(o, index) {
+                return `
+                <div class="glass-card overflow-hidden cursor-pointer group flex flex-col ${o.pinned ? 'border-l-2 border-l-white/30' : ''}" onclick="openModal(${index})">
+                    <div class="p-6 sm:p-7 flex flex-col h-full">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                                <span class="text-white text-sm font-bold">${o.author.charAt(0).toUpperCase()}</span>
+                            </div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <span class="text-white/90 text-sm font-medium truncate">${escapeHtml(o.author)}</span>
+                                    ${o.pinned ? '<span class="rank-badge rank-leader">PINNED</span>' : ''}
+                                </div>
+                                <span class="text-white/30 text-xs">${fmtDate(o.created_at)}</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-white font-semibold text-lg sm:text-xl mb-3 leading-snug">${escapeHtml(o.title)}</h3>
+                        <p class="text-white/50 text-sm leading-relaxed line-clamp-2 mb-4">${escapeHtml(o.content)}</p>
+                        
+                        <div class="mt-auto pt-4 border-t border-white/5 flex justify-end">
+                            <span class="text-xs font-medium text-white/30 opacity-0 md:group-hover:opacity-100 transition-opacity hidden md:block">Click to read more →</span>
+                            <span class="text-xs font-medium text-white/30 md:hidden block">Tap to read →</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+        } catch(err) {
+            console.error(err);
+            box.innerHTML = '';
+            emp.classList.remove('hidden');
+        }
+    }
+
+    // Load Players
+    async function loadPlayers() {
+        const grid = document.getElementById('players-grid');
+        const emp = document.getElementById('no-players');
+
+        try {
+            const r = await sb.from('players')
+                .select('*')
+                .order('created_at', { ascending: true });
+
+            if(r.error) throw new Error(r.error.message);
+
+            const players = r.data || [];
+
+            if(players.length === 0) { grid.innerHTML = ''; emp.classList.remove('hidden'); return; }
+            emp.classList.add('hidden');
+
+            grid.innerHTML = players.map(function(p, i) {
+                const defaultAv = `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=1a1a2a&color=ffffff&size=200&bold=true`;
+                const defaultSkin = `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=0a0a0f&color=666666&size=200&bold=true&format=svg`;
+                const av = p.avatar_url || defaultAv;
+                const sk = p.skin_url || defaultSkin;
+                let chips = '';
+
+                if(p.bedwars_level) chips += `<span class="info-chip"><span class="iconify text-[10px]" data-icon="lucide:swords"></span>BW ${escapeHtml(p.bedwars_level)}</span>`;
+                if(p.previous_guilds) chips += `<span class="info-chip"><span class="iconify text-[10px]" data-icon="lucide:castle"></span>${escapeHtml(p.previous_guilds)}</span>`;
+                if(p.alts) chips += `<span class="info-chip"><span class="iconify text-[10px]" data-icon="lucide:users"></span>Alt: ${escapeHtml(p.alts)}</span>`;
+
+                return `
+                <div class="fade-in glass-card overflow-hidden mt-8 flex flex-col h-full" style="transition-delay: ${i * 0.06}s;">
+                    <div class="flex justify-center pt-8 pb-4 shrink-0">
+                        <img src="${sk}" alt="" class="skin-img w-16 h-36 rounded-xl object-cover border border-white/10 shadow-lg" loading="lazy" onerror="this.src='${defaultSkin}'">
+                    </div>
+                    
+                    <div class="px-6 pb-6 text-center flex-1 flex flex-col">
+                        <h3 class="text-white font-bold text-xl mb-2 truncate">${escapeHtml(p.name)}</h3>
+                        <div class="mb-3">
+                            <span class="rank-badge ${rankClass(p.rank)}">${p.rank || 'Member'}</span>
+                        </div>
+                        <p class="text-white/40 text-sm leading-relaxed mb-4 line-clamp-2">${escapeHtml(p.description || '')}</p>
+                        ${chips ? `<div class="flex flex-wrap justify-center gap-1.5 mt-auto">${chips}</div>` : ''}
+                    </div>
+                    
+                    <div class="relative pt-10 pb-5 px-5 border-t border-white/5 bg-white/[0.02] text-center flex flex flex-col items-center mt-auto shrink-0">
+                        <img src="${av}" alt="${escapeHtml(p.name)}" class="w-16 h-16 rounded-full border-[3px] border-black bg-white/10 absolute -top-8 object-cover shadow-xl" loading="lazy" onerror="this.src='${defaultAv}'">
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="iconify text-[#5865F2] text-lg" data-icon="ic:baseline-discord"></span>
+                            <span class="text-white/60 font-medium text-sm truncate">${p.discord || '@' + p.name.toLowerCase()}</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            grid.querySelectorAll('.fade-in:not(.visible)').forEach(function(el) { observer.observe(el); });
+
+        } catch(err) {
+            console.error(err);
+            grid.innerHTML = '';
+            emp.classList.remove('hidden');
+        }
+    }
+
+    // Initialize
+    loadPosts();
+    loadPlayers();
+
+})();
+</script>
+
 </body>
 </html>
